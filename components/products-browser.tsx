@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { SlidersHorizontal, X } from 'lucide-react'
+import { SlidersHorizontal, X, Search } from 'lucide-react'
 import { laptops, brands, categories, formatPrice } from '@/lib/products'
 import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import { Separator } from '@/components/ui/separator'
+import { Input } from '@/components/ui/input'
 import {
   Select,
   SelectContent,
@@ -31,7 +32,14 @@ const sortLabels: Record<SortKey, string> = {
   rating: 'بیشترین امتیاز',
 }
 
-export function ProductsBrowser({ initialCategory }: { initialCategory?: string }) {
+export function ProductsBrowser({
+  initialCategory,
+  initialSearch,
+}: {
+  initialCategory?: string
+  initialSearch?: string
+}) {
+  const [search, setSearch] = useState(initialSearch ?? '')
   const [selectedCats, setSelectedCats] = useState<string[]>(
     initialCategory ? [initialCategory] : [],
   )
@@ -54,7 +62,27 @@ export function ProductsBrowser({ initialCategory }: { initialCategory?: string 
   }
 
   const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase()
+
     const result = laptops.filter((l) => {
+      // جستجوی متنی
+      if (q) {
+        const searchable = [
+          l.name,
+          l.brand,
+          l.category,
+          l.cpu,
+          l.gpu,
+          l.os,
+          l.description,
+          ...l.highlights,
+        ]
+          .join(' ')
+          .toLowerCase()
+
+        if (!searchable.includes(q)) return false
+      }
+
       if (selectedCats.length && !selectedCats.includes(l.category)) return false
       if (selectedBrands.length && !selectedBrands.includes(l.brand)) return false
       if (selectedRam.length && !selectedRam.includes(l.ram)) return false
@@ -77,16 +105,18 @@ export function ProductsBrowser({ initialCategory }: { initialCategory?: string 
         result.sort((a, b) => b.reviews - a.reviews)
     }
     return result
-  }, [selectedCats, selectedBrands, selectedRam, priceRange, inStockOnly, sort])
+  }, [search, selectedCats, selectedBrands, selectedRam, priceRange, inStockOnly, sort])
 
   const activeCount =
     selectedCats.length +
     selectedBrands.length +
     selectedRam.length +
     (inStockOnly ? 1 : 0) +
-    (priceRange[0] !== PRICE_MIN || priceRange[1] !== PRICE_MAX ? 1 : 0)
+    (priceRange[0] !== PRICE_MIN || priceRange[1] !== PRICE_MAX ? 1 : 0) +
+    (search.trim() ? 1 : 0)
 
   const resetFilters = () => {
+    setSearch('')
     setSelectedCats([])
     setSelectedBrands([])
     setSelectedRam([])
@@ -201,6 +231,27 @@ export function ProductsBrowser({ initialCategory }: { initialCategory?: string 
         <p className="mt-1 text-sm text-muted-foreground">
           {filtered.length.toLocaleString('fa-IR')} محصول یافت شد
         </p>
+      </div>
+
+      {/* جعبه جستجو */}
+      <div className="relative mb-5 max-w-md">
+        <Search className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <Input
+          type="search"
+          placeholder="جستجو بر اساس نام، برند، پردازنده..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="pr-10"
+        />
+        {search && (
+          <button
+            onClick={() => setSearch('')}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            aria-label="پاک کردن جستجو"
+          >
+            <X className="size-4" />
+          </button>
+        )}
       </div>
 
       <div className="flex items-center justify-between gap-3">

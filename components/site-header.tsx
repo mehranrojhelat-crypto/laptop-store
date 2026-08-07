@@ -1,10 +1,12 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Laptop, Menu, Search, ShoppingCart, X } from 'lucide-react'
 import { useCart } from '@/components/cart-provider'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 
 const nav = [
@@ -17,7 +19,22 @@ const nav = [
 
 export function SiteHeader() {
   const { count } = useCart()
+  const router = useRouter()
   const [open, setOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [query, setQuery] = useState('')
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    const q = query.trim()
+    if (q) {
+      router.push(`/products?q=${encodeURIComponent(q)}`)
+    } else {
+      router.push('/products')
+    }
+    setSearchOpen(false)
+    setOpen(false)
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur">
@@ -43,9 +60,16 @@ export function SiteHeader() {
         </div>
 
         <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" aria-label="جستجو">
-            <Search className="size-5" />
+          {/* دکمه ذره‌بین */}
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label="جستجو"
+            onClick={() => setSearchOpen((v) => !v)}
+          >
+            {searchOpen ? <X className="size-5" /> : <Search className="size-5" />}
           </Button>
+
           <Button
             asChild
             variant="ghost"
@@ -62,6 +86,7 @@ export function SiteHeader() {
               )}
             </Link>
           </Button>
+
           <Button
             variant="ghost"
             size="icon"
@@ -74,6 +99,27 @@ export function SiteHeader() {
         </div>
       </div>
 
+      {/* باکس جستجوی هدر */}
+      {searchOpen && (
+        <div className="border-t border-border px-4 py-3 sm:px-6">
+          <form onSubmit={handleSearch} className="mx-auto flex max-w-7xl gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="جستجوی لپ‌تاپ، برند، پردازنده..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="pr-10"
+                autoFocus
+              />
+            </div>
+            <Button type="submit">جستجو</Button>
+          </form>
+        </div>
+      )}
+
+      {/* منوی موبایل */}
       <div
         className={cn(
           'overflow-hidden border-t border-border lg:hidden',
