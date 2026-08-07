@@ -8,7 +8,7 @@ import { useCart } from '@/components/cart-provider'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-
+import { ThemeToggle } from '@/components/theme-toggle'
 const nav = [
   { label: 'همه محصولات', href: '/products' },
   { label: 'گیمینگ', href: '/products?cat=گیمینگ' },
@@ -59,13 +59,14 @@ export function SiteHeader() {
           </nav>
         </div>
 
-        <div className="flex items-center gap-1">
-          {/* دکمه ذره‌بین */}
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="جستجو"
-            onClick={() => setSearchOpen((v) => !v)}
+       <div className="flex items-center gap-1">
+        <ThemeToggle />
+
+        <Button
+         variant="ghost"
+         size="icon"
+         aria-label="جستجو"
+         onClick={() => setSearchOpen((v) => !v)}
           >
             {searchOpen ? <X className="size-5" /> : <Search className="size-5" />}
           </Button>
