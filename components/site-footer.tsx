@@ -11,15 +11,31 @@ const features = [
 const linkGroups = [
   {
     title: 'دسته‌بندی‌ها',
-    links: ['گیمینگ', 'اولترابوک', 'اداری', 'مهندسی', 'دانشجویی'],
+    links: [
+      { label: 'گیمینگ', href: '/products?cat=گیمینگ' },
+      { label: 'اولترابوک', href: '/products?cat=اولترابوک' },
+      { label: 'اداری', href: '/products?cat=اداری' },
+      { label: 'مهندسی', href: '/products?cat=مهندسی' },
+      { label: 'دانشجویی', href: '/products?cat=دانشجویی' },
+    ],
   },
   {
     title: 'خدمات مشتریان',
-    links: ['پیگیری سفارش', 'شرایط گارانتی', 'بازگشت کالا', 'سوالات متداول'],
+    links: [
+      { label: 'پیگیری سفارش', href: '/contact' },
+      { label: 'شرایط گارانتی', href: '/about' },
+      { label: 'بازگشت کالا', href: '/contact' },
+      { label: 'سوالات متداول', href: '/contact' },
+    ],
   },
   {
     title: 'درباره ما',
-    links: ['معرفی فروشگاه', 'تماس با ما', 'فرصت‌های شغلی', 'وبلاگ'],
+    links: [
+      { label: 'معرفی فروشگاه', href: '/about' },
+      { label: 'تماس با ما', href: '/contact' },
+      { label: 'فرصت‌های شغلی', href: '/contact' },
+      { label: 'وبلاگ', href: '/products' },
+    ],
   },
 ]
 
@@ -54,17 +70,18 @@ export function SiteFooter() {
               قیمت مناسب و گارانتی معتبر.
             </p>
           </div>
+
           {linkGroups.map((group) => (
             <div key={group.title}>
               <h3 className="mb-4 text-sm font-semibold">{group.title}</h3>
               <ul className="flex flex-col gap-2.5">
                 {group.links.map((link) => (
-                  <li key={link}>
+                  <li key={link.label}>
                     <Link
-                      href="/products"
+                      href={link.href}
                       className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
-                      {link}
+                      {link.label}
                     </Link>
                   </li>
                 ))}
