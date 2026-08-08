@@ -1,5 +1,6 @@
 'use client'
-
+import { User } from 'lucide-react'
+import { useAuth } from '@/components/auth-provider'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -18,6 +19,7 @@ const nav = [
 ]
 
 export function SiteHeader() {
+  const { user, ready } = useAuth()
   const { count } = useCart()
   const router = useRouter()
   const [open, setOpen] = useState(false)
@@ -99,6 +101,14 @@ export function SiteHeader() {
           </Button>
         </div>
       </div>
+      {ready && (
+  <Button asChild variant="ghost" size="icon" aria-label="حساب کاربری">
+    <Link href={user ? '/profile' : '/login'}>
+      <User className="size-5" />
+    </Link>
+  </Button>
+)}
+
 
       {/* باکس جستجوی هدر */}
       {searchOpen && (
