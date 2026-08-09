@@ -46,113 +46,112 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Light theme - برند نارنجی لپ‌تاپ‌لند */
+/* Light theme - Tech Premium */
 :root {
   color-scheme: light;
-  --background: oklch(0.985 0.004 85);
-  --foreground: oklch(0.2 0.02 260);
+  --background: oklch(0.985 0.004 250);
+  --foreground: oklch(0.18 0.02 260);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.02 260);
+  --card-foreground: oklch(0.18 0.02 260);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.02 260);
-  --primary: oklch(0.68 0.18 45);
+  --popover-foreground: oklch(0.18 0.02 260);
+  --primary: oklch(0.65 0.19 45);
   --primary-foreground: oklch(0.99 0.005 90);
-  --secondary: oklch(0.96 0.01 85);
-  --secondary-foreground: oklch(0.25 0.02 260);
-  --muted: oklch(0.96 0.008 85);
-  --muted-foreground: oklch(0.5 0.02 260);
-  --accent: oklch(0.95 0.03 55);
-  --accent-foreground: oklch(0.32 0.08 45);
-  --destructive: oklch(0.58 0.22 27);
-  --border: oklch(0.91 0.01 85);
-  --input: oklch(0.91 0.01 85);
-  --ring: oklch(0.68 0.18 45);
-  --chart-1: oklch(0.68 0.18 45);
-  --chart-2: oklch(0.55 0.12 250);
-  --chart-3: oklch(0.6 0.13 160);
-  --chart-4: oklch(0.72 0.14 90);
+  --secondary: oklch(0.96 0.008 250);
+  --secondary-foreground: oklch(0.22 0.02 260);
+  --muted: oklch(0.96 0.006 250);
+  --muted-foreground: oklch(0.48 0.02 260);
+  --accent: oklch(0.96 0.025 50);
+  --accent-foreground: oklch(0.35 0.08 45);
+  --destructive: oklch(0.55 0.22 25);
+  --border: oklch(0.90 0.01 250);
+  --input: oklch(0.90 0.01 250);
+  --ring: oklch(0.65 0.19 45);
+  --chart-1: oklch(0.65 0.19 45);
+  --chart-2: oklch(0.55 0.14 250);
+  --chart-3: oklch(0.60 0.14 160);
+  --chart-4: oklch(0.70 0.12 90);
   --chart-5: oklch(0.55 0.14 320);
   --radius: 0.75rem;
-  --sidebar: oklch(0.985 0.004 85);
-  --sidebar-foreground: oklch(0.2 0.02 260);
-  --sidebar-primary: oklch(0.68 0.18 45);
+  --sidebar: oklch(0.985 0.004 250);
+  --sidebar-foreground: oklch(0.18 0.02 260);
+  --sidebar-primary: oklch(0.65 0.19 45);
   --sidebar-primary-foreground: oklch(0.99 0.005 90);
-  --sidebar-accent: oklch(0.96 0.01 85);
-  --sidebar-accent-foreground: oklch(0.25 0.02 260);
-  --sidebar-border: oklch(0.91 0.01 85);
-  --sidebar-ring: oklch(0.68 0.18 45);
+  --sidebar-accent: oklch(0.96 0.008 250);
+  --sidebar-accent-foreground: oklch(0.22 0.02 260);
+  --sidebar-border: oklch(0.90 0.01 250);
+  --sidebar-ring: oklch(0.65 0.19 45);
 }
 
-/* Dark theme - primary همچنان نارنجی برند می‌ماند */
+/* Dark theme - Tech Premium */
 .dark {
   color-scheme: dark;
-  --background: oklch(0.16 0.01 260);
-  --foreground: oklch(0.97 0.005 90);
-  --card: oklch(0.2 0.012 260);
-  --card-foreground: oklch(0.97 0.005 90);
-  --popover: oklch(0.2 0.012 260);
-  --popover-foreground: oklch(0.97 0.005 90);
+  --background: oklch(0.14 0.015 260);
+  --foreground: oklch(0.96 0.005 250);
+  --card: oklch(0.18 0.015 260);
+  --card-foreground: oklch(0.96 0.005 250);
+  --popover: oklch(0.18 0.015 260);
+  --popover-foreground: oklch(0.96 0.005 250);
   --primary: oklch(0.72 0.17 45);
-  --primary-foreground: oklch(0.18 0.02 45);
-  --secondary: oklch(0.25 0.012 260);
-  --secondary-foreground: oklch(0.97 0.005 90);
-  --muted: oklch(0.25 0.012 260);
-  --muted-foreground: oklch(0.72 0.02 260);
-  --accent: oklch(0.28 0.03 45);
-  --accent-foreground: oklch(0.95 0.02 55);
-  --destructive: oklch(0.65 0.2 25);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 14%);
+  --primary-foreground: oklch(0.16 0.02 45);
+  --secondary: oklch(0.22 0.015 260);
+  --secondary-foreground: oklch(0.96 0.005 250);
+  --muted: oklch(0.22 0.015 260);
+  --muted-foreground: oklch(0.70 0.02 250);
+  --accent: oklch(0.25 0.03 45);
+  --accent-foreground: oklch(0.92 0.03 55);
+  --destructive: oklch(0.62 0.2 25);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 12%);
   --ring: oklch(0.72 0.17 45);
   --chart-1: oklch(0.72 0.17 45);
-  --chart-2: oklch(0.6 0.12 250);
+  --chart-2: oklch(0.60 0.12 250);
   --chart-3: oklch(0.65 0.12 160);
   --chart-4: oklch(0.75 0.12 90);
-  --chart-5: oklch(0.6 0.12 320);
-  --sidebar: oklch(0.18 0.01 260);
-  --sidebar-foreground: oklch(0.97 0.005 90);
+  --chart-5: oklch(0.60 0.12 320);
+  --sidebar: oklch(0.16 0.015 260);
+  --sidebar-foreground: oklch(0.96 0.005 250);
   --sidebar-primary: oklch(0.72 0.17 45);
-  --sidebar-primary-foreground: oklch(0.18 0.02 45);
-  --sidebar-accent: oklch(0.25 0.012 260);
-  --sidebar-accent-foreground: oklch(0.97 0.005 90);
-  --sidebar-border: oklch(1 0 0 / 12%);
+  --sidebar-primary-foreground: oklch(0.16 0.02 45);
+  --sidebar-accent: oklch(0.22 0.015 260);
+  --sidebar-accent-foreground: oklch(0.96 0.005 250);
+  --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.72 0.17 45);
 }
 
-/* اگر کلاس light/dark دستی نباشد، از سیستم پیروی کند */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
     color-scheme: dark;
-    --background: oklch(0.16 0.01 260);
-    --foreground: oklch(0.97 0.005 90);
-    --card: oklch(0.2 0.012 260);
-    --card-foreground: oklch(0.97 0.005 90);
-    --popover: oklch(0.2 0.012 260);
-    --popover-foreground: oklch(0.97 0.005 90);
+    --background: oklch(0.14 0.015 260);
+    --foreground: oklch(0.96 0.005 250);
+    --card: oklch(0.18 0.015 260);
+    --card-foreground: oklch(0.96 0.005 250);
+    --popover: oklch(0.18 0.015 260);
+    --popover-foreground: oklch(0.96 0.005 250);
     --primary: oklch(0.72 0.17 45);
-    --primary-foreground: oklch(0.18 0.02 45);
-    --secondary: oklch(0.25 0.012 260);
-    --secondary-foreground: oklch(0.97 0.005 90);
-    --muted: oklch(0.25 0.012 260);
-    --muted-foreground: oklch(0.72 0.02 260);
-    --accent: oklch(0.28 0.03 45);
-    --accent-foreground: oklch(0.95 0.02 55);
-    --destructive: oklch(0.65 0.2 25);
-    --border: oklch(1 0 0 / 12%);
-    --input: oklch(1 0 0 / 14%);
+    --primary-foreground: oklch(0.16 0.02 45);
+    --secondary: oklch(0.22 0.015 260);
+    --secondary-foreground: oklch(0.96 0.005 250);
+    --muted: oklch(0.22 0.015 260);
+    --muted-foreground: oklch(0.70 0.02 250);
+    --accent: oklch(0.25 0.03 45);
+    --accent-foreground: oklch(0.92 0.03 55);
+    --destructive: oklch(0.62 0.2 25);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 12%);
     --ring: oklch(0.72 0.17 45);
     --chart-1: oklch(0.72 0.17 45);
-    --chart-2: oklch(0.6 0.12 250);
+    --chart-2: oklch(0.60 0.12 250);
     --chart-3: oklch(0.65 0.12 160);
     --chart-4: oklch(0.75 0.12 90);
-    --chart-5: oklch(0.6 0.12 320);
-    --sidebar: oklch(0.18 0.01 260);
-    --sidebar-foreground: oklch(0.97 0.005 90);
+    --chart-5: oklch(0.60 0.12 320);
+    --sidebar: oklch(0.16 0.015 260);
+    --sidebar-foreground: oklch(0.96 0.005 250);
     --sidebar-primary: oklch(0.72 0.17 45);
-    --sidebar-primary-foreground: oklch(0.18 0.02 45);
-    --sidebar-accent: oklch(0.25 0.012 260);
-    --sidebar-accent-foreground: oklch(0.97 0.005 90);
-    --sidebar-border: oklch(1 0 0 / 12%);
+    --sidebar-primary-foreground: oklch(0.16 0.02 45);
+    --sidebar-accent: oklch(0.22 0.015 260);
+    --sidebar-accent-foreground: oklch(0.96 0.005 250);
+    --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.72 0.17 45);
   }
 }
@@ -176,7 +175,6 @@
     color: var(--foreground);
   }
 
-  /* اسکرول‌بار ظریف‌تر */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
