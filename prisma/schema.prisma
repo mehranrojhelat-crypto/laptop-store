@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Laptop {
+  id          String   @id
+  name        String
+  brand       String
+  category    String
+  price       Int
+  oldPrice    Int?
+  image       String
+  rating      Float
+  reviews     Int
+  inStock     Boolean  @default(true)
+  badge       String?
+  cpu         String
+  ram         Int
+  storage     Int
+  gpu         String
+  screen      Float
+  os          String
+  weight      String
+  battery     String
+  description String
+  highlights  String   // به صورت JSON ذخیره می‌شه
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

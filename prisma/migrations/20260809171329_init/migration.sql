@@ -1,0 +1,26 @@
+-- CreateTable
+CREATE TABLE "Laptop" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "brand" TEXT NOT NULL,
+    "category" TEXT NOT NULL,
+    "price" INTEGER NOT NULL,
+    "oldPrice" INTEGER,
+    "image" TEXT NOT NULL,
+    "rating" REAL NOT NULL,
+    "reviews" INTEGER NOT NULL,
+    "inStock" BOOLEAN NOT NULL DEFAULT true,
+    "badge" TEXT,
+    "cpu" TEXT NOT NULL,
+    "ram" INTEGER NOT NULL,
+    "storage" INTEGER NOT NULL,
+    "gpu" TEXT NOT NULL,
+    "screen" REAL NOT NULL,
+    "os" TEXT NOT NULL,
+    "weight" TEXT NOT NULL,
+    "battery" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "highlights" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL
+);

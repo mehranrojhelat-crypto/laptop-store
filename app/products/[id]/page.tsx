@@ -15,13 +15,14 @@ import {
   BatteryCharging,
   MonitorSmartphone,
 } from 'lucide-react'
-import { getLaptop, laptops, formatPrice } from '@/lib/products'
+import { getLaptop, getLaptops, formatPrice } from '@/lib/products'
 import { AddToCart } from '@/components/add-to-cart'
 import { ProductCard } from '@/components/product-card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const laptops = await getLaptops()
   return laptops.map((l) => ({ id: l.id }))
 }
 
@@ -31,8 +32,10 @@ export default async function ProductDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const laptop = getLaptop(id)
+  const laptop = await getLaptop(id)
   if (!laptop) notFound()
+
+  const allLaptops = await getLaptops()
 
   const specs = [
     { icon: Cpu, label: 'پردازنده', value: laptop.cpu },
@@ -52,10 +55,10 @@ export default async function ProductDetailPage({
     { icon: Cpu, label: 'سیستم‌عامل', value: laptop.os },
   ]
 
-  const related = laptops
+  const related = allLaptops
     .filter((l) => l.id !== laptop.id && l.category === laptop.category)
     .slice(0, 4)
-  const fallback = laptops.filter((l) => l.id !== laptop.id).slice(0, 4)
+  const fallback = allLaptops.filter((l) => l.id !== laptop.id).slice(0, 4)
   const suggestions = related.length ? related : fallback
 
   return (

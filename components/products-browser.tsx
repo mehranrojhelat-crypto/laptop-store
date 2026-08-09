@@ -2,11 +2,10 @@
 
 import { useMemo, useState } from 'react'
 import { SlidersHorizontal, X, Search } from 'lucide-react'
-import { laptops, brands, categories, formatPrice } from '@/lib/products'
+import { brands, categories, formatPrice, type Laptop } from '@/lib/products'
 import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import { Separator } from '@/components/ui/separator'
 import { Input } from '@/components/ui/input'
@@ -32,13 +31,17 @@ const sortLabels: Record<SortKey, string> = {
   rating: 'بیشترین امتیاز',
 }
 
-export function ProductsBrowser({
-  initialCategory,
-  initialSearch,
-}: {
+type Props = {
+  initialLaptops: Laptop[]
   initialCategory?: string
   initialSearch?: string
-}) {
+}
+
+export function ProductsBrowser({
+  initialLaptops,
+  initialCategory,
+  initialSearch,
+}: Props) {
   const [search, setSearch] = useState(initialSearch ?? '')
   const [selectedCats, setSelectedCats] = useState<string[]>(
     initialCategory ? [initialCategory] : [],
@@ -64,7 +67,7 @@ export function ProductsBrowser({
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
 
-    const result = laptops.filter((l) => {
+    const result = initialLaptops.filter((l) => {
       // جستجوی متنی
       if (q) {
         const searchable = [
@@ -105,7 +108,16 @@ export function ProductsBrowser({
         result.sort((a, b) => b.reviews - a.reviews)
     }
     return result
-  }, [search, selectedCats, selectedBrands, selectedRam, priceRange, inStockOnly, sort])
+  }, [
+    initialLaptops,
+    search,
+    selectedCats,
+    selectedBrands,
+    selectedRam,
+    priceRange,
+    inStockOnly,
+    sort,
+  ])
 
   const activeCount =
     selectedCats.length +

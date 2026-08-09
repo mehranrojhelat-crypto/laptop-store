@@ -1,20 +1,22 @@
+import { prisma } from './prisma'
+
 export type Laptop = {
   id: string
   name: string
   brand: string
-  category: 'گیمینگ' | 'اولترابوک' | 'اداری' | 'مهندسی' | 'دانشجویی'
+  category: string
   price: number
-  oldPrice?: number
+  oldPrice?: number | null
   image: string
   rating: number
   reviews: number
   inStock: boolean
-  badge?: string
+  badge?: string | null
   cpu: string
-  ram: number // GB
-  storage: number // GB
+  ram: number
+  storage: number
   gpu: string
-  screen: number // inch
+  screen: number
   os: string
   weight: string
   battery: string
@@ -22,500 +24,46 @@ export type Laptop = {
   highlights: string[]
 }
 
-export const laptops: Laptop[] = [
-  // ——— موجود قبلی‌ها (بهینه‌شده) ———
-  {
-    id: 'pro-ultra-14',
-    name: 'پرو اولترا ۱۴',
-    brand: 'نکسوس',
-    category: 'اولترابوک',
-    price: 92500000,
-    oldPrice: 105000000,
-    image: '/laptops/pro-ultra-14.jpg',
-    rating: 4.8,
-    reviews: 214,
-    inStock: true,
-    badge: 'پرفروش',
-    cpu: 'Intel Core Ultra 7',
-    ram: 32,
-    storage: 1024,
-    gpu: 'Intel Arc Graphics',
-    screen: 14,
-    os: 'ویندوز ۱۱',
-    weight: '۱.۲ کیلوگرم',
-    battery: 'تا ۱۸ ساعت',
-    description:
-      'اولترابوک فوق‌سبک با بدنه آلومینیومی یکپارچه، نمایشگر OLED و عمر باتری استثنایی؛ همراه ایده‌آل برای کار و سفر.',
-    highlights: [
-      'نمایشگر ۲.۸K OLED با نرخ نوسازی ۱۲۰ هرتز',
-      'بدنه آلومینیوم CNC با وزن تنها ۱.۲ کیلوگرم',
-      'شارژ سریع؛ ۵۰٪ در ۳۰ دقیقه',
-    ],
-  },
-  {
-    id: 'raptor-x16',
-    name: 'رپتور ایکس ۱۶',
-    brand: 'والکان',
-    category: 'گیمینگ',
-    price: 138000000,
-    image: '/laptops/raptor-x16.jpg',
-    rating: 4.7,
-    reviews: 331,
-    inStock: true,
-    badge: 'گیمینگ',
-    cpu: 'AMD Ryzen 9',
-    ram: 32,
-    storage: 2048,
-    gpu: 'NVIDIA RTX 4080',
-    screen: 16,
-    os: 'ویندوز ۱۱',
-    weight: '۲.۵ کیلوگرم',
-    battery: 'تا ۸ ساعت',
-    description:
-      'لپ‌تاپ گیمینگ قدرتمند با کارت گرافیک RTX 4080 و سیستم خنک‌کننده پیشرفته برای اجرای روان جدیدترین بازی‌ها.',
-    highlights: [
-      'نمایشگر ۱۶ اینچ QHD با نرخ نوسازی ۲۴۰ هرتز',
-      'کیبورد RGB با نورپردازی هر کلید',
-      'سیستم خنک‌کننده مایع فلزی',
-    ],
-  },
-  {
-    id: 'slim-book-pro',
-    name: 'اسلیم بوک پرو',
-    brand: 'نکسوس',
-    category: 'اداری',
-    price: 61000000,
-    oldPrice: 68000000,
-    image: '/laptops/slim-book-pro.jpg',
-    rating: 4.5,
-    reviews: 178,
-    inStock: true,
-    cpu: 'Intel Core i5',
-    ram: 16,
-    storage: 512,
-    gpu: 'Intel Iris Xe',
-    screen: 14,
-    os: 'ویندوز ۱۱',
-    weight: '۱.۴ کیلوگرم',
-    battery: 'تا ۱۴ ساعت',
-    description:
-      'لپ‌تاپ اداری سبک و بادوام با امنیت سازمانی و صفحه‌کلید ارگونومیک؛ انتخابی مطمئن برای محیط کار.',
-    highlights: [
-      'اسکنر اثر انگشت و دوربین IR',
-      'درگاه‌های کامل شامل HDMI و USB-C',
-      'استانداردهای نظامی مقاومت MIL-STD',
-    ],
-  },
-  {
-    id: 'flip-studio-2in1',
-    name: 'فلیپ استودیو ۲ در ۱',
-    brand: 'آریا',
-    category: 'دانشجویی',
-    price: 74000000,
-    image: '/laptops/flip-studio-2in1.jpg',
-    rating: 4.6,
-    reviews: 96,
-    inStock: true,
-    badge: 'جدید',
-    cpu: 'Intel Core Ultra 5',
-    ram: 16,
-    storage: 512,
-    gpu: 'Intel Arc Graphics',
-    screen: 13,
-    os: 'ویندوز ۱۱',
-    weight: '۱.۳ کیلوگرم',
-    battery: 'تا ۱۶ ساعت',
-    description:
-      'لپ‌تاپ تبدیل‌شونده با نمایشگر لمسی و قلم اختصاصی؛ مناسب برای یادداشت‌برداری، طراحی و سرگرمی.',
-    highlights: [
-      'صفحه لمسی چرخشی ۳۶۰ درجه',
-      'قلم دیجیتال با ۴۰۹۶ سطح فشار',
-      'وزن سبک برای حمل روزانه',
-    ],
-  },
-  {
-    id: 'creator-studio-16',
-    name: 'کریتور استودیو ۱۶',
-    brand: 'والکان',
-    category: 'مهندسی',
-    price: 154000000,
-    oldPrice: 169000000,
-    image: '/laptops/creator-studio.png',
-    rating: 4.9,
-    reviews: 142,
-    inStock: false,
-    badge: 'حرفه‌ای',
-    cpu: 'Intel Core Ultra 9',
-    ram: 64,
-    storage: 2048,
-    gpu: 'NVIDIA RTX 4090',
-    screen: 16,
-    os: 'ویندوز ۱۱ پرو',
-    weight: '۲.۱ کیلوگرم',
-    battery: 'تا ۱۰ ساعت',
-    description:
-      'ورک‌استیشن قابل حمل برای ویرایش ویدیو، رندر سه‌بعدی و مدل‌سازی؛ با نمایشگر کالیبره‌شده رنگی.',
-    highlights: [
-      'نمایشگر ۴K با پوشش ۱۰۰٪ فضای رنگی DCI-P3',
-      '۶۴ گیگابایت رم برای پروژه‌های سنگین',
-      'دو اسلات SSD قابل ارتقا',
-    ],
-  },
-  {
-    id: 'everyday-air-13',
-    name: 'اوری‌دی ایر ۱۳',
-    brand: 'آریا',
-    category: 'دانشجویی',
-    price: 43500000,
-    image: '/laptops/everyday-air.png',
-    rating: 4.3,
-    reviews: 267,
-    inStock: true,
-    badge: 'اقتصادی',
-    cpu: 'AMD Ryzen 5',
-    ram: 8,
-    storage: 256,
-    gpu: 'AMD Radeon Graphics',
-    screen: 13,
-    os: 'ویندوز ۱۱',
-    weight: '۱.۱ کیلوگرم',
-    battery: 'تا ۱۲ ساعت',
-    description:
-      'لپ‌تاپ سبک و مقرون‌به‌صرفه برای کارهای روزمره، مرور وب و کلاس‌های آنلاین؛ گزینه‌ای عالی برای دانشجویان.',
-    highlights: [
-      'وزن فوق‌سبک ۱.۱ کیلوگرم',
-      'صفحه‌نمایش Full HD ضدبازتاب',
-      'قیمت مناسب برای شروع',
-    ],
-  },
+// تبدیل رکورد دیتابیس به تایپ Laptop
+function mapLaptop(laptop: any): Laptop {
+  return {
+    ...laptop,
+    oldPrice: laptop.oldPrice ?? undefined,
+    badge: laptop.badge ?? undefined,
+    highlights: JSON.parse(laptop.highlights || '[]'),
+  }
+}
 
-  // ——— محصولات جدید ———
-  {
-    id: 'titan-blade-15',
-    name: 'تیتان بلید ۱۵',
-    brand: 'تیتان',
-    category: 'گیمینگ',
-    price: 119000000,
-    oldPrice: 132000000,
-    image: '/laptops/titan-blade-15.jpg',
-    rating: 4.6,
-    reviews: 189,
-    inStock: true,
-    badge: 'تخفیف ویژه',
-    cpu: 'Intel Core i7-14700HX',
-    ram: 32,
-    storage: 1024,
-    gpu: 'NVIDIA RTX 4070',
-    screen: 15.6,
-    os: 'ویندوز ۱۱',
-    weight: '۲.۳ کیلوگرم',
-    battery: 'تا ۹ ساعت',
-    description:
-      'لپ‌تاپ گیمینگ متعادل با قدرت بالا و قیمت مناسب؛ ایده‌آل برای گیمرهایی که به دنبال بهترین نسبت عملکرد به قیمت هستند.',
-    highlights: [
-      'نمایشگر ۱۵.۶ اینچ QHD 165Hz',
-      'سیستم خنک‌کننده سه‌فن',
-      'کیبورد مکانیکال با RGB',
-    ],
-  },
-  {
-    id: 'aurora-slim-13',
-    name: 'آرورا اسلیم ۱۳',
-    brand: 'آرورا',
-    category: 'اولترابوک',
-    price: 87500000,
-    image: '/laptops/aurora-slim-13.jpg',
-    rating: 4.7,
-    reviews: 156,
-    inStock: true,
-    badge: 'جدید',
-    cpu: 'AMD Ryzen AI 9',
-    ram: 32,
-    storage: 1024,
-    gpu: 'AMD Radeon 890M',
-    screen: 13.3,
-    os: 'ویندوز ۱۱',
-    weight: '۰.۹۹ کیلوگرم',
-    battery: 'تا ۲۰ ساعت',
-    description:
-      'نازک‌ترین و سبک‌ترین اولترابوک سری آرورا با پردازنده AI و عمر باتری فوق‌العاده برای سفرهای طولانی.',
-    highlights: [
-      'وزن کمتر از یک کیلوگرم',
-      'نمایشگر OLED 2.8K لمسی',
-      'پشتیبانی از Wi-Fi 7',
-    ],
-  },
-  {
-    id: 'cyber-force-17',
-    name: 'سایبر فورس ۱۷',
-    brand: 'سایبر',
-    category: 'گیمینگ',
-    price: 165000000,
-    image: '/laptops/cyber-force-17.jpg',
-    rating: 4.8,
-    reviews: 98,
-    inStock: true,
-    badge: 'پرچمدار',
-    cpu: 'Intel Core Ultra 9',
-    ram: 64,
-    storage: 2048,
-    gpu: 'NVIDIA RTX 4090',
-    screen: 17.3,
-    os: 'ویندوز ۱۱',
-    weight: '۲.۹ کیلوگرم',
-    battery: 'تا ۷ ساعت',
-    description:
-      'هیولا‌ی گیمینگ ۱۷ اینچی با بالاترین مشخصات سخت‌افزاری موجود برای بازی‌های 4K و استریم حرفه‌ای.',
-    highlights: [
-      'نمایشگر ۱۷.۳ اینچ Mini-LED 240Hz',
-      'سیستم خنک‌کننده بخارچمبر',
-      'پورت‌های کامل Thunderbolt 5',
-    ],
-  },
-  {
-    id: 'nexus-office-15',
-    name: 'نکسوس آفیس ۱۵',
-    brand: 'نکسوس',
-    category: 'اداری',
-    price: 52000000,
-    oldPrice: 58000000,
-    image: '/laptops/nexus-office-15.jpeg',
-    rating: 4.4,
-    reviews: 203,
-    inStock: true,
-    cpu: 'Intel Core i5',
-    ram: 16,
-    storage: 512,
-    gpu: 'Intel UHD Graphics',
-    screen: 15.6,
-    os: 'ویندوز ۱۱ پرو',
-    weight: '۱.۷ کیلوگرم',
-    battery: 'تا ۱۲ ساعت',
-    description:
-      'لپ‌تاپ اداری مقرون‌به‌صرفه با صفحه‌نمایش بزرگ و کیبورد راحت برای کارهای روزمره و جلسات طولانی.',
-    highlights: [
-      'صفحه‌کلید عددی کامل',
-      'وب‌کم Full HD با پرده حریم خصوصی',
-      'گارانتی ۳ ساله سازمانی',
-    ],
-  },
-  {
-    id: 'aria-study-14',
-    name: 'آریا استادی ۱۴',
-    brand: 'آریا',
-    category: 'دانشجویی',
-    price: 48900000,
-    image: '/laptops/aria-study-14.jpg',
-    rating: 4.5,
-    reviews: 312,
-    inStock: true,
-    badge: 'پرفروش',
-    cpu: 'AMD Ryzen 7',
-    ram: 16,
-    storage: 512,
-    gpu: 'AMD Radeon Graphics',
-    screen: 14,
-    os: 'ویندوز ۱۱',
-    weight: '۱.۳۵ کیلوگرم',
-    battery: 'تا ۱۵ ساعت',
-    description:
-      'انتخاب محبوب دانشجویان با تعادل عالی بین عملکرد، باتری و قیمت مناسب برای کلاس و پروژه‌ها.',
-    highlights: [
-      'رم ۱۶ گیگابایت قابل ارتقا',
-      'صفحه‌نمایش ضدنور آبی',
-      'شارژ سریع USB-C',
-    ],
-  },
-  {
-    id: 'titan-workstation-16',
-    name: 'تیتان ورک‌استیشن ۱۶',
-    brand: 'تیتان',
-    category: 'مهندسی',
-    price: 142000000,
-    image: '/laptops/titan-workstation-16.jpg',
-    rating: 4.8,
-    reviews: 87,
-    inStock: true,
-    badge: 'حرفه‌ای',
-    cpu: 'AMD Ryzen 9 PRO',
-    ram: 64,
-    storage: 2048,
-    gpu: 'NVIDIA RTX 4080',
-    screen: 16,
-    os: 'ویندوز ۱۱ پرو',
-    weight: '۲.۲ کیلوگرم',
-    battery: 'تا ۱۱ ساعت',
-    description:
-      'ورک‌استیشن قابل حمل برای مهندسان و طراحان با قدرت رندر بالا و پایداری در کارهای سنگین.',
-    highlights: [
-      'نمایشگر ۱۶ اینچ 4K OLED',
-      'پشتیبانی از ECC Memory',
-      'دو اسلات M.2 قابل ارتقا',
-    ],
-  },
-  {
-    id: 'aurora-book-14',
-    name: 'آرورا بوک ۱۴',
-    brand: 'آرورا',
-    category: 'اولترابوک',
-    price: 69500000,
-    oldPrice: 76000000,
-    image: '/laptops/aurora-book-14.jpg',
-    rating: 4.6,
-    reviews: 145,
-    inStock: true,
-    cpu: 'Intel Core Ultra 5',
-    ram: 16,
-    storage: 512,
-    gpu: 'Intel Arc Graphics',
-    screen: 14,
-    os: 'ویندوز ۱۱',
-    weight: '۱.۱۵ کیلوگرم',
-    battery: 'تا ۱۷ ساعت',
-    description:
-      'اولترابوک شیک و سبک با تمرکز روی بهره‌وری و طراحی مینیمال برای کاربران حرفه‌ای.',
-    highlights: [
-      'بدنه منیزیمی فوق‌سبک',
-      'کیبورد کم‌عمق با نور پس‌زمینه',
-      'پشتیبانی از شارژ بی‌سیم',
-    ],
-  },
-  {
-    id: 'cyber-edge-15',
-    name: 'سایبر اج ۱۵',
-    brand: 'سایبر',
-    category: 'گیمینگ',
-    price: 98000000,
-    image: '/laptops/cyber-edge-15.jpg',
-    rating: 4.5,
-    reviews: 167,
-    inStock: true,
-    badge: 'گیمینگ',
-    cpu: 'AMD Ryzen 7',
-    ram: 16,
-    storage: 1024,
-    gpu: 'NVIDIA RTX 4060',
-    screen: 15.6,
-    os: 'ویندوز ۱۱',
-    weight: '۲.۱ کیلوگرم',
-    battery: 'تا ۱۰ ساعت',
-    description:
-      'لپ‌تاپ گیمینگ میان‌رده با عملکرد عالی در بازی‌های Full HD و قابلیت حمل نسبتاً خوب.',
-    highlights: [
-      'نمایشگر ۱۵.۶ اینچ 144Hz IPS',
-      'سیستم خنک‌کننده دو فن',
-      'نورپردازی RGB قابل تنظیم',
-    ],
-  },
-  {
-    id: 'nexus-travel-13',
-    name: 'نکسوس تراول ۱۳',
-    brand: 'نکسوس',
-    category: 'اولترابوک',
-    price: 78500000,
-    image: '/laptops/nexus-travel-13.jpg',
-    rating: 4.7,
-    reviews: 129,
-    inStock: false,
-    badge: 'جدید',
-    cpu: 'Intel Core Ultra 7',
-    ram: 32,
-    storage: 1024,
-    gpu: 'Intel Arc Graphics',
-    screen: 13.5,
-    os: 'ویندوز ۱۱',
-    weight: '۱.۰۵ کیلوگرم',
-    battery: 'تا ۱۹ ساعت',
-    description:
-      'همراه ایده‌آل سفر با صفحه‌نمایش خاص ۳:۲ و عمر باتری بسیار بالا برای کار بدون دغدغه شارژ.',
-    highlights: [
-      'نسبت تصویر ۳:۲ مناسب کار',
-      'وزن فوق‌سبک ۱ کیلوگرم',
-      'پورت‌های Thunderbolt 4',
-    ],
-  },
-  {
-    id: 'aria-convert-14',
-    name: 'آریا کانورت ۱۴',
-    brand: 'آریا',
-    category: 'دانشجویی',
-    price: 67000000,
-    oldPrice: 72000000,
-    image: '/laptops/aria-convert-14.jpg',
-    rating: 4.4,
-    reviews: 88,
-    inStock: true,
-    cpu: 'Intel Core i5',
-    ram: 16,
-    storage: 512,
-    gpu: 'Intel Iris Xe',
-    screen: 14,
-    os: 'ویندوز ۱۱',
-    weight: '۱.۴۵ کیلوگرم',
-    battery: 'تا ۱۴ ساعت',
-    description:
-      'لپ‌تاپ ۲ در ۱ با قلم دیجیتال برای دانشجویان هنر، معماری و کسانی که به نوشتن و طراحی علاقه دارند.',
-    highlights: [
-      'نمایشگر لمسی Full HD',
-      'قلم با ۴۰۹۶ سطح فشار',
-      'حالت‌های لپ‌تاپ، تبلت و چادر',
-    ],
-  },
-  {
-    id: 'titan-pro-14',
-    name: 'تیتان پرو ۱۴',
-    brand: 'تیتان',
-    category: 'اداری',
-    price: 81500000,
-    image: '/laptops/titan-pro-14.jpg',
-    rating: 4.6,
-    reviews: 112,
-    inStock: true,
-    badge: 'سازمانی',
-    cpu: 'Intel Core Ultra 7',
-    ram: 32,
-    storage: 1024,
-    gpu: 'Intel Arc Graphics',
-    screen: 14,
-    os: 'ویندوز ۱۱ پرو',
-    weight: '۱.۳ کیلوگرم',
-    battery: 'تا ۱۶ ساعت',
-    description:
-      'لپ‌تاپ سازمانی با امنیت بالا، مدیریت از راه دور و دوام عالی برای محیط‌های کاری حرفه‌ای.',
-    highlights: [
-      'چیپ امنیتی TPM 2.0 و IR Camera',
-      'گارانتی ۴ ساله on-site',
-      'پشتیبانی از vPro',
-    ],
-  },
-  {
-    id: 'cyber-studio-16',
-    name: 'سایبر استودیو ۱۶',
-    brand: 'سایبر',
-    category: 'مهندسی',
-    price: 128000000,
-    oldPrice: 139000000,
-    image: '/laptops/cyber-studio-16.jpg',
-    rating: 4.7,
-    reviews: 76,
-    inStock: true,
-    cpu: 'AMD Ryzen 9',
-    ram: 32,
-    storage: 2048,
-    gpu: 'NVIDIA RTX 4070',
-    screen: 16,
-    os: 'ویندوز ۱۱ پرو',
-    weight: '۲.۰ کیلوگرم',
-    battery: 'تا ۱۲ ساعت',
-    description:
-      'استودیوی قابل حمل برای تولید محتوا، ادیت ویدیو و طراحی سه‌بعدی با تعادل عالی قدرت و حمل‌پذیری.',
-    highlights: [
-      'نمایشگر ۱۶ اینچ QHD+ 240Hz',
-      'سیستم خنک‌کننده پیشرفته',
-      'پورت‌های متعدد برای اتصال تجهیزات',
-    ],
-  },
-]
+export async function getLaptops(): Promise<Laptop[]> {
+  const data = await prisma.laptop.findMany({
+    orderBy: { createdAt: 'desc' },
+  })
+  return data.map(mapLaptop)
+}
+
+export async function getLaptop(id: string): Promise<Laptop | null> {
+  const data = await prisma.laptop.findUnique({
+    where: { id },
+  })
+  return data ? mapLaptop(data) : null
+}
+
+export async function getFeaturedLaptops(limit = 4): Promise<Laptop[]> {
+  const data = await prisma.laptop.findMany({
+    take: limit,
+    orderBy: { reviews: 'desc' },
+  })
+  return data.map(mapLaptop)
+}
+
+export async function getDealLaptops(): Promise<Laptop[]> {
+  const data = await prisma.laptop.findMany({
+    where: {
+      oldPrice: { not: null },
+    },
+  })
+  return data.map(mapLaptop)
+}
 
 export const brands = ['نکسوس', 'والکان', 'آریا', 'تیتان', 'آرورا', 'سایبر']
 
@@ -526,10 +74,6 @@ export const categories = [
   'مهندسی',
   'دانشجویی',
 ] as const
-
-export function getLaptop(id: string) {
-  return laptops.find((l) => l.id === id)
-}
 
 export function formatPrice(price: number) {
   return price.toLocaleString('fa-IR')

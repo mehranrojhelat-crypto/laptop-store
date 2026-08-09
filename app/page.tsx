@@ -10,7 +10,7 @@ import {
   Truck,
   CreditCard,
 } from 'lucide-react'
-import { laptops, categories } from '@/lib/products'
+import { getFeaturedLaptops, getDealLaptops, categories } from '@/lib/products'
 import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
 
@@ -40,9 +40,9 @@ const features = [
   },
 ]
 
-export default function HomePage() {
-  const featured = laptops.slice(0, 4)
-  const deals = laptops.filter((l) => l.oldPrice)
+export default async function HomePage() {
+  const featured = await getFeaturedLaptops(4)
+  const deals = await getDealLaptops()
 
   return (
     <div className="overflow-hidden">
