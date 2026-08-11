@@ -47,78 +47,44 @@ export default async function HomePage() {
   return (
     <div className="overflow-hidden">
       {/* Hero */}
-      <section className="relative border-b border-border">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/15 via-background to-background" />
-        <div className="pointer-events-none absolute -left-24 top-10 size-72 rounded-full bg-primary/10 blur-3xl" />
+<section className="relative overflow-hidden border-b border-border">
+  {/* گرادیان متحرک */}
+  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/20 via-background to-background" />
+  <div className="pointer-events-none absolute -left-32 top-0 size-96 rounded-full bg-primary/15 blur-3xl animate-pulse" />
+  <div className="pointer-events-none absolute -right-20 bottom-10 size-80 rounded-full bg-orange-500/10 blur-3xl" />
 
-        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 md:py-20">
-          <div className="order-2 md:order-1">
-            <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1.5 text-sm font-medium text-primary shadow-sm">
-              <Sparkles className="size-4" />
-              فصل جدید لپ‌تاپ‌ها رسید
-            </span>
+  <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-24">
+    {/* ... متن سمت چپ همون قبلی بمونه، فقط دکمه‌ها رو این‌طوری کن: */}
+    <div className="mt-8 flex flex-wrap gap-3">
+      <Button asChild size="lg" className="rounded-2xl px-7 shadow-lg shadow-primary/30 transition-all hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5">
+        <Link href="/products">
+          مشاهده محصولات
+          <ArrowLeft className="size-4" />
+        </Link>
+      </Button>
+      <Button asChild variant="outline" size="lg" className="rounded-2xl border-primary/30 bg-background/60 backdrop-blur hover:bg-primary/5">
+        <Link href="/products?cat=گیمینگ">لپ‌تاپ‌های گیمینگ</Link>
+      </Button>
+    </div>
 
-            <h1 className="mt-6 text-4xl font-black leading-[1.2] tracking-tight text-balance sm:text-5xl lg:text-[3.25rem]">
-              لپ‌تاپی برای{' '}
-              <span className="text-primary">هر هدف</span>
-              <br />
-              انتخابی مطمئن برای تو
-            </h1>
-
-            <p className="mt-5 max-w-md text-base leading-8 text-muted-foreground text-pretty">
-              از گیمینگ حرفه‌ای تا اولترابوک‌های سبک؛ جدیدترین مدل‌ها با گارانتی
-              رسمی و پرداخت امن را همین‌جا پیدا کن.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="rounded-xl px-6 shadow-md shadow-primary/20">
-                <Link href="/products">
-                  مشاهده محصولات
-                  <ArrowLeft className="size-4" />
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="rounded-xl border-border/80 bg-background/70 backdrop-blur"
-              >
-                <Link href="/products?cat=گیمینگ">لپ‌تاپ‌های گیمینگ</Link>
-              </Button>
-            </div>
-
-            <div className="mt-10 grid grid-cols-3 gap-3 border-t border-border/70 pt-6">
-              {features.map((f) => (
-                <div key={f.title} className="text-center sm:text-right">
-                  <div className="mx-auto mb-2 flex size-9 items-center justify-center rounded-lg bg-secondary text-primary sm:mx-0">
-                    <f.icon className="size-4" />
-                  </div>
-                  <p className="text-xs font-bold sm:text-sm">{f.title}</p>
-                  <p className="mt-0.5 hidden text-[11px] text-muted-foreground sm:block">
-                    {f.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="order-1 md:order-2">
-            <div className="relative mx-auto aspect-[4/3] w-full max-w-lg">
-              <div className="absolute inset-6 rounded-[2rem] bg-gradient-to-br from-primary/20 to-primary/5 blur-2xl" />
-              <div className="relative h-full overflow-hidden rounded-[1.75rem] border border-border/60 bg-card/50 p-4 shadow-2xl shadow-primary/10 backdrop-blur-sm">
-                <Image
-                  src="/laptops/hero-laptop.png"
-                  alt="لپ‌تاپ ویژه"
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-contain p-4 drop-shadow-xl"
-                />
-              </div>
-            </div>
-          </div>
+    {/* تصویر هیرو */}
+    <div className="order-1 md:order-2">
+      <div className="relative mx-auto aspect-[4/3] w-full max-w-lg">
+        <div className="absolute inset-4 rounded-[2.5rem] bg-gradient-to-br from-primary/30 to-orange-600/20 blur-2xl animate-pulse" />
+        <div className="relative h-full overflow-hidden rounded-[2rem] border border-border/50 bg-card/40 p-6 shadow-2xl shadow-primary/20 backdrop-blur-md transition-transform duration-700 hover:scale-[1.02]">
+          <Image
+            src="/laptops/hero-laptop.png"
+            alt="لپ‌تاپ ویژه"
+            fill
+            priority
+            className="object-contain p-4 drop-shadow-2xl animate-[float_6s_ease-in-out_infinite]"
+          />
         </div>
-      </section>
+      </div>
+    </div>
+  </div>
+</section>
+
 
       {/* Categories */}
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
@@ -131,20 +97,22 @@ export default async function HomePage() {
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {categories.map((cat) => {
-            const Icon = categoryIcons[cat] ?? Cpu
-            return (
-              <Link
-                key={cat}
-                href={`/products?cat=${encodeURIComponent(cat)}`}
-                className="group flex flex-col items-center gap-3 rounded-2xl border border-border/80 bg-card p-5 text-center shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/40 hover:bg-secondary/60 hover:shadow-md"
-              >
-                <span className="flex size-12 items-center justify-center rounded-xl bg-secondary text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                  <Icon className="size-5" />
-                </span>
-                <span className="text-sm font-semibold">{cat}</span>
-              </Link>
-            )
-          })}
+  const Icon = categoryIcons[cat] ?? Cpu
+  return (
+    <Link
+      key={cat}
+      href={`/products?cat=${encodeURIComponent(cat)}`}
+      className="group relative flex flex-col items-center gap-4 overflow-hidden rounded-2xl border border-border/70 bg-card p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10"
+    >
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/0 to-primary/5 opacity-0 transition-opacity group-hover:opacity-100" />
+      <span className="relative flex size-14 items-center justify-center rounded-2xl bg-secondary text-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-lg group-hover:shadow-primary/30">
+        <Icon className="size-6" />
+      </span>
+      <span className="relative text-sm font-bold">{cat}</span>
+    </Link>
+  )
+})}
+
         </div>
       </section>
 
@@ -173,50 +141,54 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Deals */}
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-l from-primary via-primary to-orange-600 px-5 py-10 text-primary-foreground sm:px-10">
-          <div className="pointer-events-none absolute -left-10 -top-10 size-40 rounded-full bg-white/10 blur-2xl" />
-          <div className="pointer-events-none absolute -bottom-16 right-10 size-52 rounded-full bg-black/10 blur-3xl" />
+{/* Deals */}
+<section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+  <div className="relative overflow-hidden rounded-3xl bg-gradient-to-l from-primary via-orange-500 to-orange-600 p-1 shadow-2xl shadow-primary/25">
+    <div className="relative rounded-[1.4rem] bg-gradient-to-l from-primary via-primary to-orange-600 px-6 py-12 sm:px-12">
+      {/* افکت‌های نور */}
+      <div className="pointer-events-none absolute -left-16 -top-16 size-56 rounded-full bg-white/20 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-20 right-0 size-72 rounded-full bg-black/20 blur-3xl" />
 
-          <div className="relative flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-            <div>
-              <p className="mb-2 inline-flex rounded-full bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur">
-                پیشنهاد ویژه
-              </p>
-              <h2 className="text-2xl font-black sm:text-3xl">
-                فروش ویژه لپ‌تاپ‌های منتخب
-              </h2>
-              <p className="mt-2 max-w-md text-sm leading-7 text-primary-foreground/90">
-                تا سقف موجودی از تخفیف‌های شگفت‌انگیز روی مدل‌های محبوب بهره‌مند
-                شوید.
-              </p>
-            </div>
-            <Button
-              asChild
-              size="lg"
-              variant="secondary"
-              className="rounded-xl shadow-lg"
-            >
-              <Link href="/products">
-                مشاهده تخفیف‌ها
-                <ArrowLeft className="size-4" />
-              </Link>
-            </Button>
-          </div>
-
-          <div className="relative mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {deals.slice(0, 3).map((laptop) => (
-              <div
-                key={laptop.id}
-                className="rounded-2xl bg-background/95 p-1 text-foreground shadow-lg backdrop-blur"
-              >
-                <ProductCard laptop={laptop} />
-              </div>
-            ))}
-          </div>
+      <div className="relative flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
+        <div>
+          <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-semibold backdrop-blur-sm">
+            🔥 پیشنهاد ویژه محدود
+          </span>
+          <h2 className="text-3xl font-black sm:text-4xl">
+            فروش ویژه لپ‌تاپ‌های منتخب
+          </h2>
+          <p className="mt-3 max-w-lg text-base leading-7 text-primary-foreground/90">
+            تا سقف موجودی از تخفیف‌های شگفت‌انگیز بهره‌مند شو. فرصت محدوده!
+          </p>
         </div>
-      </section>
+        <Button
+          asChild
+          size="lg"
+          variant="secondary"
+          className="rounded-2xl px-8 text-base font-bold shadow-xl transition-transform hover:scale-105"
+        >
+          <Link href="/products">
+            مشاهده همه تخفیف‌ها
+            <ArrowLeft className="size-5" />
+          </Link>
+        </Button>
+      </div>
+
+      {/* کارت‌ها */}
+      <div className="relative mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {deals.slice(0, 3).map((laptop) => (
+          <div
+            key={laptop.id}
+            className="rounded-2xl bg-background/95 p-1.5 shadow-xl backdrop-blur-sm ring-1 ring-white/20"
+          >
+            <ProductCard laptop={laptop} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
     </div>
   )
 }

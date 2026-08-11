@@ -1,8 +1,9 @@
 'use client'
 
+import { useToast } from '@/components/ui/toast'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Star, ShoppingCart, Percent } from 'lucide-react'
+import { Star, ShoppingCart, Percent, Eye } from 'lucide-react'
 import type { Laptop } from '@/lib/products'
 import { formatPrice } from '@/lib/products'
 import { useCart } from '@/components/cart-provider'
@@ -12,6 +13,7 @@ import { cn } from '@/lib/utils'
 
 export function ProductCard({ laptop }: { laptop: Laptop }) {
   const { addItem } = useCart()
+  const { toast } = useToast()
 
   const discountPercent =
     laptop.oldPrice && laptop.oldPrice > laptop.price
@@ -21,33 +23,40 @@ export function ProductCard({ laptop }: { laptop: Laptop }) {
   return (
     <div
       className={cn(
-        'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-card',
-        'shadow-sm transition-all duration-300',
-        'hover:-translate-y-1 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5',
+        'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card',
+        'shadow-sm transition-all duration-400',
+        'hover:-translate-y-2 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10',
       )}
     >
       <Link
         href={`/products/${laptop.id}`}
-        className="relative block aspect-[4/3] overflow-hidden bg-gradient-to-b from-secondary/80 to-secondary"
+        className="relative block aspect-[4/3] overflow-hidden bg-gradient-to-b from-secondary/90 to-secondary/50"
       >
         <Image
           src={laptop.image || '/placeholder.svg'}
           alt={laptop.name}
           fill
           sizes="(max-width: 768px) 50vw, 25vw"
-          className="object-contain p-5 transition-transform duration-500 group-hover:scale-110"
+          className="object-contain p-5 transition-all duration-500 group-hover:scale-110 group-hover:rotate-1"
         />
 
-        <div className="absolute right-2.5 top-2.5 flex flex-col items-end gap-1.5">
+        <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/0 opacity-0 transition-all duration-300 group-hover:bg-black/25 group-hover:opacity-100">
+          <span className="flex items-center gap-1.5 rounded-xl bg-background/95 px-4 py-2 text-sm font-semibold shadow-lg backdrop-blur-sm scale-90 transition-transform duration-300 group-hover:scale-100">
+            <Eye className="size-4" />
+            مشاهده سریع
+          </span>
+        </div>
+
+        <div className="absolute right-3 top-3 flex flex-col items-end gap-1.5">
           {laptop.badge && (
-            <Badge className="border-0 bg-primary text-[11px] text-primary-foreground shadow-sm">
+            <Badge className="border-0 bg-primary text-xs font-bold text-primary-foreground shadow-md">
               {laptop.badge}
             </Badge>
           )}
           {discountPercent && (
-            <Badge className="border-0 bg-red-500 text-[11px] text-white shadow-sm">
+            <Badge className="border-0 bg-red-500 text-xs font-bold text-white shadow-md animate-pulse">
               <Percent className="ml-0.5 size-3" />
-              {discountPercent.toLocaleString('fa-IR')}٪
+              {discountPercent.toLocaleString('fa-IR')}٪ تخفیف
             </Badge>
           )}
         </div>
@@ -61,9 +70,9 @@ export function ProductCard({ laptop }: { laptop: Laptop }) {
         )}
       </Link>
 
-      <div className="flex flex-1 flex-col gap-2 p-4">
+      <div className="flex flex-1 flex-col gap-2.5 p-4">
         <div className="flex items-center justify-between gap-2">
-          <span className="rounded-md bg-secondary px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
+          <span className="rounded-lg bg-secondary px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
             {laptop.brand}
           </span>
           <span className="flex items-center gap-1 text-xs font-medium text-foreground/80">
@@ -83,18 +92,18 @@ export function ProductCard({ laptop }: { laptop: Laptop }) {
           {laptop.screen.toLocaleString('fa-IR')} اینچ
         </p>
 
-        <div className="mt-auto flex items-end justify-between gap-2 border-t border-border/60 pt-3">
+        <div className="mt-auto flex items-end justify-between gap-2 border-t border-border/50 pt-3">
           <div className="min-w-0">
             {laptop.oldPrice && (
-              <span className="block text-[11px] text-muted-foreground line-through">
+              <span className="block text-xs text-muted-foreground line-through">
                 {formatPrice(laptop.oldPrice)}
               </span>
             )}
             <div className="flex items-baseline gap-1">
-              <span className="text-base font-extrabold tracking-tight text-foreground sm:text-lg">
+              <span className="text-lg font-black tracking-tight text-foreground sm:text-xl">
                 {formatPrice(laptop.price)}
               </span>
-              <span className="text-[11px] text-muted-foreground">تومان</span>
+              <span className="text-xs text-muted-foreground">تومان</span>
             </div>
           </div>
 
@@ -103,12 +112,17 @@ export function ProductCard({ laptop }: { laptop: Laptop }) {
             disabled={!laptop.inStock}
             onClick={(e) => {
               e.preventDefault()
+              e.stopPropagation()
               addItem(laptop)
+              toast(`${laptop.name} به سبد اضافه شد`, {
+                actionHref: '/cart',
+                actionLabel: 'مشاهده سبد',
+              })
             }}
             aria-label="افزودن به سبد"
-            className="size-9 shrink-0 rounded-xl shadow-sm transition-transform active:scale-95"
+            className="size-10 shrink-0 rounded-xl shadow-md transition-all hover:scale-110 active:scale-95"
           >
-            <ShoppingCart className="size-4" />
+            <ShoppingCart className="size-4.5" />
           </Button>
         </div>
       </div>

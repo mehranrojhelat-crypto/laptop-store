@@ -102,15 +102,15 @@ export function SiteHeader() {
         className={cn(
           'sticky top-0 z-50 border-b transition-all duration-300',
           scrolled
-            ? 'border-border/80 bg-background/90 shadow-md shadow-black/5 backdrop-blur-xl'
+            ? 'border-border/80 bg-background/95 shadow-lg shadow-black/5 backdrop-blur-xl'
             : 'border-border/40 bg-background/80 backdrop-blur-md',
         )}
       >
         <div className="mx-auto flex h-[4.25rem] max-w-7xl items-center gap-3 px-4 sm:px-6">
           {/* لوگو */}
           <Link href="/" className="group flex shrink-0 items-center gap-2.5">
-            <span className="flex size-10 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-md shadow-primary/25 transition-transform duration-300 group-hover:scale-105">
-              <Laptop className="size-5" />
+            <span className="flex size-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-md shadow-primary/25 transition-transform duration-300 group-hover:scale-110">
+              <Laptop className="size-5.5" />
             </span>
             <div className="leading-none">
               <p className="text-lg font-black tracking-tight">
@@ -363,7 +363,7 @@ export function SiteHeader() {
               <span className="flex size-9 items-center justify-center rounded-xl bg-secondary text-primary">
                 {user ? <User className="size-4" /> : <LogIn className="size-4" />}
               </span>
-              {user ? `حساب من (${user.name})` : 'ورود / ثبت‌نام'}
+              {user ? 'حساب کاربری' : 'ورود / ثبت‌نام'}
             </Link>
 
             <Link
@@ -371,24 +371,17 @@ export function SiteHeader() {
               onClick={closeDrawer}
               className="flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
             >
-              <span className="flex size-9 items-center justify-center rounded-xl bg-secondary text-primary">
+              <span className="relative flex size-9 items-center justify-center rounded-xl bg-secondary text-primary">
                 <ShoppingCart className="size-4" />
+                {count > 0 && (
+                  <span className="absolute -left-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+                    {count > 99 ? '۹۹+' : count.toLocaleString('fa-IR')}
+                  </span>
+                )}
               </span>
               سبد خرید
-              {count > 0 && (
-                <span className="mr-auto rounded-full bg-primary px-2.5 py-0.5 text-[11px] font-bold text-primary-foreground">
-                  {count.toLocaleString('fa-IR')}
-                </span>
-              )}
             </Link>
           </nav>
-        </div>
-
-        {/* فوتر Drawer */}
-        <div className="border-t border-border px-4 py-4">
-          <p className="text-center text-xs text-muted-foreground">
-            لپ‌تاپ‌لند — خرید مطمئن
-          </p>
         </div>
       </aside>
     </>

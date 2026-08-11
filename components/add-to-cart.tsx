@@ -1,4 +1,5 @@
 'use client'
+import { useToast } from '@/components/ui/toast'
 
 import { useState } from 'react'
 import Link from 'next/link'
@@ -17,6 +18,18 @@ export function AddToCart({ laptop }: { laptop: Laptop }) {
     setAdded(true)
     setTimeout(() => setAdded(false), 2000)
   }
+  
+const { toast } = useToast()
+
+const handleAdd = () => {
+  addItem(laptop, qty)
+  setAdded(true)
+  toast(`${laptop.name} به سبد اضافه شد`, {
+    actionHref: '/cart',
+    actionLabel: 'مشاهده سبد',
+  })
+  setTimeout(() => setAdded(false), 2000)
+}
 
   if (!laptop.inStock) {
     return (
