@@ -78,3 +78,51 @@ export const categories = [
 export function formatPrice(price: number) {
   return price.toLocaleString('fa-IR')
 }
+
+
+
+/** محصولات مشابه بر اساس دسته‌بندی، برند و نزدیکی قیمت */
+export async function getSimilarLaptops(
+  laptop: Laptop,
+  limit = 4,
+): Promise<Laptop[]> {
+  const all = await prisma.laptop.findMany({
+    where: { id: { not: laptop.id } },
+  })
+
+  const scored = all
+    .map((row) => {
+      const item = mapLaptop(row)
+      let score = 0
+
+      // همان دسته‌بندی = بیشترین وزن
+      if (item.category === laptop.category) score += 50
+
+      // همان برند
+      if (item.brand === laptop.brand) score += 20
+
+      // نزدیکی قیمت (هرچه نزدیک‌تر، امتیاز بیشتر)
+      const priceDiff = Math.abs(item.price - laptop.price)
+      const priceRatio = priceDiff / Math.max(laptop.price, 1)
+      if (priceRatio < 0.15) score += 15
+      else if (priceRatio < 0.3) score += 10
+      else if (priceRatio < 0.5) score += 5
+
+      // رم مشابه
+      if (item.ram === laptop.ram) score += 8
+
+      // اندازه صفحه مشابه
+      if (Math.abs(item.screen - laptop.screen) <= 0.5) score += 5
+
+      // اولویت به موجودها
+      if (item.inStock) score += 3
+
+      // امتیاز بالاتر کمی کمک کند
+      score += item.rating
+
+      return { item, score }
+    })
+    .sort((a, b) => b.score - a.score)
+
+  return scored.slice(0, limit).map((s) => s.item)
+}

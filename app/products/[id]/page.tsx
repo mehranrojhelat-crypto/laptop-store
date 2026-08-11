@@ -14,17 +14,17 @@ import {
   Weight,
   BatteryCharging,
   MonitorSmartphone,
+  ArrowLeft,
 } from 'lucide-react'
-import { getLaptop, getLaptops, formatPrice } from '@/lib/products'
+import {
+  getLaptop,
+  getSimilarLaptops,
+  formatPrice,
+} from '@/lib/products'
 import { AddToCart } from '@/components/add-to-cart'
 import { ProductCard } from '@/components/product-card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
-
-export async function generateStaticParams() {
-  const laptops = await getLaptops()
-  return laptops.map((l) => ({ id: l.id }))
-}
 
 export default async function ProductDetailPage({
   params,
@@ -35,7 +35,7 @@ export default async function ProductDetailPage({
   const laptop = await getLaptop(id)
   if (!laptop) notFound()
 
-  const allLaptops = await getLaptops()
+  const suggestions = await getSimilarLaptops(laptop, 4)
 
   const specs = [
     { icon: Cpu, label: 'پردازنده', value: laptop.cpu },
@@ -55,25 +55,26 @@ export default async function ProductDetailPage({
     { icon: Cpu, label: 'سیستم‌عامل', value: laptop.os },
   ]
 
-  const related = allLaptops
-    .filter((l) => l.id !== laptop.id && l.category === laptop.category)
-    .slice(0, 4)
-  const fallback = allLaptops.filter((l) => l.id !== laptop.id).slice(0, 4)
-  const suggestions = related.length ? related : fallback
-
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-1 text-sm text-muted-foreground">
+      <nav className="flex flex-wrap items-center gap-1 text-sm text-muted-foreground">
         <Link href="/" className="hover:text-foreground">
           خانه
         </Link>
-        <ChevronLeft className="size-4" />
+        <ChevronLeft className="size-4 shrink-0" />
         <Link href="/products" className="hover:text-foreground">
           محصولات
         </Link>
-        <ChevronLeft className="size-4" />
-        <span className="text-foreground">{laptop.name}</span>
+        <ChevronLeft className="size-4 shrink-0" />
+        <Link
+          href={`/products?cat=${encodeURIComponent(laptop.category)}`}
+          className="hover:text-foreground"
+        >
+          {laptop.category}
+        </Link>
+        <ChevronLeft className="size-4 shrink-0" />
+        <span className="text-foreground line-clamp-1">{laptop.name}</span>
       </nav>
 
       <div className="mt-6 grid gap-8 lg:grid-cols-2">
@@ -101,7 +102,7 @@ export default async function ProductDetailPage({
           </span>
           <h1 className="mt-1 text-3xl font-bold text-balance">{laptop.name}</h1>
 
-          <div className="mt-3 flex items-center gap-3">
+          <div className="mt-3 flex flex-wrap items-center gap-3">
             <span className="flex items-center gap-1 text-sm font-medium">
               <Star className="size-4 fill-primary text-primary" />
               {laptop.rating.toLocaleString('fa-IR')}
@@ -184,15 +185,32 @@ export default async function ProductDetailPage({
         </div>
       </section>
 
-      {/* Related */}
-      <section className="mt-12">
-        <h2 className="mb-4 text-xl font-bold">محصولات مشابه</h2>
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {suggestions.map((l) => (
-            <ProductCard key={l.id} laptop={l} />
-          ))}
-        </div>
-      </section>
+      {/* Related / Similar products */}
+      {suggestions.length > 0 && (
+        <section className="mt-12">
+          <div className="mb-5 flex items-end justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-bold sm:text-2xl">محصولات مشابه</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                پیشنهاد بر اساس دسته‌بندی، برند و محدوده قیمت
+              </p>
+            </div>
+            <Link
+              href={`/products?cat=${encodeURIComponent(laptop.category)}`}
+              className="hidden items-center gap-1 rounded-lg px-2 py-1 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 sm:flex"
+            >
+              مشاهده همه {laptop.category}
+              <ArrowLeft className="size-4" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+            {suggestions.map((l) => (
+              <ProductCard key={l.id} laptop={l} />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   )
 }
