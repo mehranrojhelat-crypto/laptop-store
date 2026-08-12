@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import { randomUUID } from 'crypto'
 
 const prisma = new PrismaClient()
 
@@ -489,22 +490,84 @@ const laptops = [
     highlights: JSON.stringify([
       'نمایشگر ۱۶ اینچ QHD+ 240Hz',
       'سیستم خنک‌کننده پیشرفته',
-      'پورت‌های متعدد برای اتصال تجهیزات',
+      'پشتیبانی از قلم و تبلت اکسترنال',
     ]),
   },
 ]
 
-async function main() {
-  console.log('شروع seeding...')
+const sampleReviews = [
+  { name: 'علی رضایی', rating: 5, comment: 'لپ‌تاپ فوق‌العاده‌ایه، برای گیمینگ عالی کار می‌کنه و خنک‌کننده‌ش خیلی قویه.' },
+  { name: 'سارا محمدی', rating: 4, comment: 'ظاهر شیک و سبک. باتری‌ش خوبه ولی کاش رم بیشتری داشت.' },
+  { name: 'محمد حسینی', rating: 5, comment: 'خریدم و راضی‌ام. ارسال سریع بود و گارانتی رسمی داره.' },
+  { name: 'فاطمه احمدی', rating: 3, comment: 'عملکردش خوبه ولی فن کمی صدا می‌ده. برای کارهای روزمره کافیه.' },
+  { name: 'رضا کریمی', rating: 5, comment: 'بهترین انتخاب برای دانشجوها. قیمت مناسب و کیفیت عالی.' },
+  { name: 'نرگس اکبری', rating: 4, comment: 'صفحه نمایشش خیلی واضحه. برای طراحی گرافیک پیشنهاد می‌کنم.' },
+  { name: 'امیرحسین موسوی', rating: 5, comment: 'گرافیکش قوی‌تر از انتظارم بود. بازی‌های سنگین رو راحت اجرا می‌کنه.' },
+  { name: 'مریم جعفری', rating: 4, comment: 'سبک و قابل حمل. فقط کمی گرم می‌شه زیر فشار.' },
+  { name: 'حسین نوری', rating: 2, comment: 'بعد از دو ماه مشکل باتری پیدا کرد. پشتیبانی خوب نبود.' },
+  { name: 'زهرا قاسمی', rating: 5, comment: 'فوق‌العاده! بسته‌بندی عالی و محصول اصل بود.' },
+  { name: 'کیانوش مرادی', rating: 4, comment: 'برای کارهای اداری عالیه. سرعت بالا و نویز کم.' },
+  { name: 'الهام صادقی', rating: 3, comment: 'قیمتش کمی بالاست نسبت به مشخصات. ولی کیفیت ساخت خوبه.' },
+  { name: 'پویا فرهادی', rating: 5, comment: 'یکی از بهترین خریدهایی که تا حالا کردم. پیشنهاد می‌کنم.' },
+  { name: 'مینا رستمی', rating: 4, comment: 'باتری واقعاً دوام داره. برای سفر عالیه.' },
+  { name: 'آرمان کاظمی', rating: 5, comment: 'رندر سه‌بعدی رو بدون مشکل انجام می‌ده. ارزش خرید داره.' },
+]
 
-  // پاک کردن داده‌های قبلی (اختیاری)
+async function updateLaptopRating(laptopId: string) {
+  const reviews = await prisma.review.findMany({ where: { laptopId } })
+  const count = reviews.length
+  const avg =
+    count > 0
+      ? Math.round((reviews.reduce((s, r) => s + r.rating, 0) / count) * 10) / 10
+      : 0
+
+  await prisma.laptop.update({
+    where: { id: laptopId },
+    data: {
+      rating: avg,
+      reviews: count,
+    },
+  })
+}
+
+async function main() {
+  console.log('شروع seed...')
+
+  // پاک کردن داده‌های قبلی
+  await prisma.review.deleteMany()
   await prisma.laptop.deleteMany()
 
+  // افزودن لپ‌تاپ‌ها
   for (const laptop of laptops) {
     await prisma.laptop.create({ data: laptop })
   }
+  console.log(`${laptops.length} لپ‌تاپ اضافه شد.`)
 
-  console.log(`✅ ${laptops.length} محصول با موفقیت اضافه شد.`)
+  // افزودن نظرات رندوم
+  const allLaptops = await prisma.laptop.findMany()
+
+  for (const laptop of allLaptops) {
+    const count = 3 + Math.floor(Math.random() * 4) // ۳ تا ۶ نظر
+    const shuffled = [...sampleReviews].sort(() => Math.random() - 0.5)
+
+    for (let i = 0; i < count; i++) {
+      const r = shuffled[i % shuffled.length]
+      await prisma.review.create({
+        data: {
+          laptopId: laptop.id,
+          authorName: r.name,
+          rating: r.rating,
+          comment: r.comment,
+          editToken: randomUUID(),
+        },
+      })
+    }
+
+    await updateLaptopRating(laptop.id)
+  }
+
+  console.log('نظرات نمونه با موفقیت اضافه شدند.')
+  console.log('Seed کامل شد.')
 }
 
 main()

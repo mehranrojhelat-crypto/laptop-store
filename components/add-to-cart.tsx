@@ -1,35 +1,28 @@
 'use client'
-import { useToast } from '@/components/ui/toast'
 
 import { useState } from 'react'
 import Link from 'next/link'
 import { Check, Minus, Plus, ShoppingCart } from 'lucide-react'
 import type { Laptop } from '@/lib/products'
 import { useCart } from '@/components/cart-provider'
+import { useToast } from '@/components/ui/toast'
 import { Button } from '@/components/ui/button'
 
 export function AddToCart({ laptop }: { laptop: Laptop }) {
   const { addItem } = useCart()
+  const { toast } = useToast()
   const [qty, setQty] = useState(1)
   const [added, setAdded] = useState(false)
 
   const handleAdd = () => {
     addItem(laptop, qty)
     setAdded(true)
+    toast(`${laptop.name} به سبد اضافه شد`, {
+      actionHref: '/cart',
+      actionLabel: 'مشاهده سبد',
+    })
     setTimeout(() => setAdded(false), 2000)
   }
-  
-const { toast } = useToast()
-
-const handleAdd = () => {
-  addItem(laptop, qty)
-  setAdded(true)
-  toast(`${laptop.name} به سبد اضافه شد`, {
-    actionHref: '/cart',
-    actionLabel: 'مشاهده سبد',
-  })
-  setTimeout(() => setAdded(false), 2000)
-}
 
   if (!laptop.inStock) {
     return (
@@ -62,6 +55,7 @@ const handleAdd = () => {
           <Plus className="size-4" />
         </Button>
       </div>
+
       <Button size="lg" className="flex-1" onClick={handleAdd}>
         {added ? (
           <>
@@ -75,6 +69,7 @@ const handleAdd = () => {
           </>
         )}
       </Button>
+
       <Button asChild size="lg" variant="outline">
         <Link href="/cart">مشاهده سبد</Link>
       </Button>

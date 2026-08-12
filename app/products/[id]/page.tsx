@@ -21,8 +21,11 @@ import {
   getSimilarLaptops,
   formatPrice,
 } from '@/lib/products'
+import { getReviews } from '@/lib/reviews'
 import { AddToCart } from '@/components/add-to-cart'
 import { ProductCard } from '@/components/product-card'
+import { ReviewForm } from '@/components/reviews/review-form'
+import { ReviewList } from '@/components/reviews/review-list'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 
@@ -35,7 +38,10 @@ export default async function ProductDetailPage({
   const laptop = await getLaptop(id)
   if (!laptop) notFound()
 
-  const suggestions = await getSimilarLaptops(laptop, 4)
+  const [suggestions, reviews] = await Promise.all([
+    getSimilarLaptops(laptop, 4),
+    getReviews(id),
+  ])
 
   const specs = [
     { icon: Cpu, label: 'پردازنده', value: laptop.cpu },
@@ -182,6 +188,22 @@ export default async function ProductDetailPage({
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Reviews */}
+      <section className="mt-12">
+        <h2 className="mb-6 text-xl font-bold">
+          نظرات کاربران ({laptop.reviews.toLocaleString('fa-IR')})
+        </h2>
+
+        <div className="grid gap-8 lg:grid-cols-5">
+          <div className="lg:col-span-2">
+            <ReviewForm laptopId={laptop.id} />
+          </div>
+          <div className="lg:col-span-3">
+            <ReviewList laptopId={laptop.id} initialReviews={reviews} />
+          </div>
         </div>
       </section>
 

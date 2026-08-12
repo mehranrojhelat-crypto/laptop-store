@@ -28,8 +28,27 @@ model Laptop {
   weight      String
   battery     String
   description String
-  highlights  String   // به صورت JSON ذخیره می‌شه
+  highlights  String
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  reviewList  Review[]   // ← اضافه شد
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  laptopId  String
+  laptop    Laptop   @relation(fields: [laptopId], references: [id], onDelete: Cascade)
+
+  authorName String
+  rating     Int      // 1 تا 5
+  comment    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // برای ویرایش: یک توکن ساده که موقع ثبت نظر به کاربر می‌دیم
+  editToken  String
+
+  @@index([laptopId])
 }
