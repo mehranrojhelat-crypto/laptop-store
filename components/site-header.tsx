@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Laptop,
   Menu,
@@ -20,6 +21,7 @@ import {
   Info,
   Phone,
   Package,
+  Loader2,
 } from 'lucide-react'
 import { useCart } from '@/components/cart-provider'
 import { useAuth } from '@/components/auth-provider'
@@ -27,6 +29,7 @@ import { ThemeToggle } from '@/components/theme-toggle'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
+import { formatPrice } from '@/lib/products'
 
 const categories = [
   { label: 'همه محصولات', href: '/products', icon: Package },
@@ -43,6 +46,16 @@ const pages = [
   { label: 'تماس با ما', href: '/contact', icon: Phone },
 ]
 
+type SearchResult = {
+  id: string
+  name: string
+  brand: string
+  price: number
+  image: string
+  category: string
+  inStock: boolean
+}
+
 export function SiteHeader() {
   const { count } = useCart()
   const { user, ready } = useAuth()
@@ -53,6 +66,14 @@ export function SiteHeader() {
   const [searchOpen, setSearchOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [scrolled, setScrolled] = useState(false)
+
+  // جستجوی زنده
+  const [suggestions, setSuggestions] = useState<SearchResult[]>([])
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false)
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const searchContainerRef = useRef<HTMLDivElement>(null)
+  const mobileSearchContainerRef = useRef<HTMLDivElement>(null)
 
   // اسکرول هدر
   useEffect(() => {
@@ -66,6 +87,9 @@ export function SiteHeader() {
   useEffect(() => {
     setDrawerOpen(false)
     setSearchOpen(false)
+    setShowSuggestions(false)
+    setQuery('')
+    setSuggestions([])
   }, [pathname])
 
   // قفل اسکرول بدن وقتی Drawer باز است + بستن با Escape
@@ -77,7 +101,10 @@ export function SiteHeader() {
     }
 
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setDrawerOpen(false)
+      if (e.key === 'Escape') {
+        setDrawerOpen(false)
+        setShowSuggestions(false)
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => {
@@ -86,15 +113,149 @@ export function SiteHeader() {
     }
   }, [drawerOpen])
 
+  // بستن پیشنهادات با کلیک بیرون
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      const target = e.target as Node
+      if (
+        searchContainerRef.current?.contains(target) ||
+        mobileSearchContainerRef.current?.contains(target)
+      ) {
+        return
+      }
+      setShowSuggestions(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  // Debounce جستجو
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+
+    const q = query.trim()
+    if (q.length < 2) {
+      setSuggestions([])
+      setLoadingSuggestions(false)
+      setShowSuggestions(false)
+      return
+    }
+
+    setLoadingSuggestions(true)
+    setShowSuggestions(true)
+
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`)
+        if (res.ok) {
+          const data = await res.json()
+          setSuggestions(data)
+        } else {
+          setSuggestions([])
+        }
+      } catch {
+        setSuggestions([])
+      } finally {
+        setLoadingSuggestions(false)
+      }
+    }, 280)
+
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current)
+    }
+  }, [query])
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     const q = query.trim()
     router.push(q ? `/products?q=${encodeURIComponent(q)}` : '/products')
     setSearchOpen(false)
     setDrawerOpen(false)
+    setShowSuggestions(false)
+  }
+
+  const goToProduct = (id: string) => {
+    router.push(`/products/${id}`)
+    setShowSuggestions(false)
+    setSearchOpen(false)
+    setDrawerOpen(false)
+    setQuery('')
   }
 
   const closeDrawer = () => setDrawerOpen(false)
+
+  // کامپوننت لیست پیشنهادات
+  const SuggestionsList = ({ className }: { className?: string }) => {
+    if (!showSuggestions || query.trim().length < 2) return null
+
+    return (
+      <div
+        className={cn(
+          'absolute z-[80] mt-2 w-full overflow-hidden rounded-2xl border border-border bg-background shadow-2xl shadow-black/10',
+          className,
+        )}
+      >
+        {loadingSuggestions ? (
+          <div className="flex items-center justify-center gap-2 py-8 text-sm text-muted-foreground">
+            <Loader2 className="size-4 animate-spin" />
+            در حال جستجو...
+          </div>
+        ) : suggestions.length === 0 ? (
+          <div className="px-4 py-6 text-center text-sm text-muted-foreground">
+            نتیجه‌ای یافت نشد
+          </div>
+        ) : (
+          <ul className="max-h-[min(70vh,420px)] overflow-y-auto py-2">
+            {suggestions.map((item) => (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  onClick={() => goToProduct(item.id)}
+                  className="flex w-full items-center gap-3 px-3 py-2.5 text-right transition-colors hover:bg-secondary"
+                >
+                  <div className="relative size-12 shrink-0 overflow-hidden rounded-xl bg-secondary">
+                    <Image
+                      src={item.image || '/placeholder.svg'}
+                      alt={item.name}
+                      fill
+                      className="object-contain p-1.5"
+                      sizes="48px"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold leading-snug">
+                      {item.name}
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      {item.brand} · {item.category}
+                    </p>
+                  </div>
+                  <div className="shrink-0 text-left">
+                    <p className="text-sm font-bold text-primary">
+                      {formatPrice(item.price)}
+                    </p>
+                    {!item.inStock && (
+                      <p className="text-[10px] text-destructive">ناموجود</p>
+                    )}
+                  </div>
+                </button>
+              </li>
+            ))}
+            <li className="border-t border-border">
+              <button
+                type="button"
+                onClick={handleSearch}
+                className="flex w-full items-center justify-center gap-2 px-3 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/5"
+              >
+                <Search className="size-4" />
+                مشاهده همه نتایج برای «{query.trim()}»
+              </button>
+            </li>
+          </ul>
+        )}
+      </div>
+    )
+  }
 
   return (
     <>
@@ -138,19 +299,26 @@ export function SiteHeader() {
           <div className="flex-1" />
 
           {/* جستجوی دسکتاپ */}
-          <form
-            onSubmit={handleSearch}
-            className="relative hidden w-full max-w-[220px] md:block lg:max-w-[260px]"
+          <div
+            ref={searchContainerRef}
+            className="relative hidden w-full max-w-[220px] md:block lg:max-w-[280px]"
           >
-            <Search className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="جستجوی لپ‌تاپ..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="h-10 rounded-2xl border-border/70 bg-secondary/60 pr-10 text-sm shadow-none focus-visible:bg-background"
-            />
-          </form>
+            <form onSubmit={handleSearch}>
+              <Search className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="جستجوی لپ‌تاپ..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onFocus={() => {
+                  if (query.trim().length >= 2) setShowSuggestions(true)
+                }}
+                className="h-10 rounded-2xl border-border/70 bg-secondary/60 pr-10 text-sm shadow-none focus-visible:bg-background"
+                autoComplete="off"
+              />
+            </form>
+            <SuggestionsList />
+          </div>
 
           {/* اکشن‌ها */}
           <div className="flex items-center gap-0.5 sm:gap-1">
@@ -224,31 +392,37 @@ export function SiteHeader() {
           className={cn(
             'border-t border-border/60 transition-all duration-300 md:hidden',
             searchOpen
-              ? 'max-h-28 opacity-100'
+              ? 'max-h-[28rem] opacity-100'
               : 'max-h-0 overflow-hidden border-t-0 opacity-0',
           )}
         >
-          <form onSubmit={handleSearch} className="flex gap-2 px-4 py-3">
-            <div className="relative flex-1">
-              <Search className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="جستجوی لپ‌تاپ، برند، پردازنده..."
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="h-11 rounded-2xl pr-10"
-                autoFocus={searchOpen}
-              />
-            </div>
-            <Button type="submit" className="h-11 rounded-2xl px-5">
-              جستجو
-            </Button>
-          </form>
+          <div ref={mobileSearchContainerRef} className="relative px-4 py-3">
+            <form onSubmit={handleSearch} className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  type="search"
+                  placeholder="جستجوی لپ‌تاپ، برند، پردازنده..."
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onFocus={() => {
+                    if (query.trim().length >= 2) setShowSuggestions(true)
+                  }}
+                  className="h-11 rounded-2xl pr-10"
+                  autoFocus={searchOpen}
+                  autoComplete="off"
+                />
+              </div>
+              <Button type="submit" className="h-11 rounded-2xl px-5">
+                جستجو
+              </Button>
+            </form>
+            <SuggestionsList className="left-0 right-0" />
+          </div>
         </div>
       </header>
 
       {/* ========== Drawer موبایل از کنار (راست) ========== */}
-      {/* Backdrop */}
       <div
         className={cn(
           'fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300 lg:hidden',
@@ -258,7 +432,6 @@ export function SiteHeader() {
         aria-hidden={!drawerOpen}
       />
 
-      {/* پنل Drawer */}
       <aside
         className={cn(
           'fixed inset-y-0 right-0 z-[70] flex w-[min(100vw-3rem,20rem)] flex-col border-l border-border bg-background shadow-2xl transition-transform duration-300 ease-out lg:hidden',
@@ -268,7 +441,6 @@ export function SiteHeader() {
         aria-modal="true"
         aria-label="منوی سایت"
       >
-        {/* هدر Drawer */}
         <div className="flex items-center justify-between border-b border-border px-4 py-4">
           <Link href="/" onClick={closeDrawer} className="flex items-center gap-2.5">
             <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
@@ -290,9 +462,7 @@ export function SiteHeader() {
           </Button>
         </div>
 
-        {/* محتوای اسکرول‌پذیر */}
         <div className="flex-1 overflow-y-auto px-3 py-4">
-          {/* صفحات اصلی */}
           <p className="mb-2 px-3 text-xs font-semibold text-muted-foreground">
             صفحات
           </p>
@@ -328,7 +498,6 @@ export function SiteHeader() {
 
           <div className="mx-3 mb-5 h-px bg-border" />
 
-          {/* دسته‌بندی‌ها */}
           <p className="mb-2 px-3 text-xs font-semibold text-muted-foreground">
             دسته‌بندی‌ها
           </p>
@@ -353,7 +522,6 @@ export function SiteHeader() {
 
           <div className="mx-3 mb-5 h-px bg-border" />
 
-          {/* حساب و سبد */}
           <nav className="space-y-1">
             <Link
               href={user ? '/profile' : '/login'}
@@ -365,7 +533,6 @@ export function SiteHeader() {
               </span>
               {user ? 'حساب کاربری' : 'ورود / ثبت‌نام'}
             </Link>
-
             <Link
               href="/cart"
               onClick={closeDrawer}
@@ -374,7 +541,7 @@ export function SiteHeader() {
               <span className="relative flex size-9 items-center justify-center rounded-xl bg-secondary text-primary">
                 <ShoppingCart className="size-4" />
                 {count > 0 && (
-                  <span className="absolute -left-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
+                  <span className="absolute -left-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[9px] font-bold text-primary-foreground">
                     {count > 99 ? '۹۹+' : count.toLocaleString('fa-IR')}
                   </span>
                 )}
