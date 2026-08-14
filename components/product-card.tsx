@@ -3,22 +3,46 @@
 import { useToast } from '@/components/ui/toast'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Star, ShoppingCart, Percent, Eye } from 'lucide-react'
+import { Star, ShoppingCart, Percent, Eye, GitCompare, Check } from 'lucide-react'
 import type { Laptop } from '@/lib/products'
 import { formatPrice } from '@/lib/products'
 import { useCart } from '@/components/cart-provider'
+import { useCompare } from '@/components/compare-provider'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 export function ProductCard({ laptop }: { laptop: Laptop }) {
   const { addItem } = useCart()
+  const { isInCompare, addItem: addCompare, removeItem: removeCompare, canAdd } =
+    useCompare()
   const { toast } = useToast()
+
+  const inCompare = isInCompare(laptop.id)
 
   const discountPercent =
     laptop.oldPrice && laptop.oldPrice > laptop.price
       ? Math.round(((laptop.oldPrice - laptop.price) / laptop.oldPrice) * 100)
       : null
+
+  const handleCompare = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (inCompare) {
+      removeCompare(laptop.id)
+      toast('از لیست مقایسه حذف شد')
+      return
+    }
+    const ok = addCompare(laptop)
+    if (ok) {
+      toast('به لیست مقایسه اضافه شد', {
+        actionHref: '/compare',
+        actionLabel: 'مشاهده مقایسه',
+      })
+    } else {
+      toast('حداکثر ۴ محصول می‌توانید مقایسه کنید')
+    }
+  }
 
   return (
     <div
@@ -26,6 +50,7 @@ export function ProductCard({ laptop }: { laptop: Laptop }) {
         'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card',
         'shadow-sm transition-all duration-400',
         'hover:-translate-y-2 hover:border-primary/40 hover:shadow-2xl hover:shadow-primary/10',
+        inCompare && 'border-primary/50 ring-2 ring-primary/20',
       )}
     >
       <Link
@@ -60,6 +85,25 @@ export function ProductCard({ laptop }: { laptop: Laptop }) {
             </Badge>
           )}
         </div>
+
+        {/* دکمه مقایسه روی تصویر */}
+        <button
+          type="button"
+          onClick={handleCompare}
+          className={cn(
+            'absolute left-3 top-3 flex size-9 items-center justify-center rounded-xl border shadow-md transition-all',
+            inCompare
+              ? 'border-primary bg-primary text-primary-foreground'
+              : 'border-border/80 bg-background/95 text-muted-foreground hover:border-primary hover:text-primary',
+          )}
+          aria-label={inCompare ? 'حذف از مقایسه' : 'افزودن به مقایسه'}
+        >
+          {inCompare ? (
+            <Check className="size-4" />
+          ) : (
+            <GitCompare className="size-4" />
+          )}
+        </button>
 
         {!laptop.inStock && (
           <div className="absolute inset-0 flex items-center justify-center bg-background/70 backdrop-blur-[2px]">

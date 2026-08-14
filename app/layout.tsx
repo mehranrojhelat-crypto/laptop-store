@@ -3,9 +3,11 @@ import type { Metadata, Viewport } from 'next'
 import { Vazirmatn } from 'next/font/google'
 import { AuthProvider } from '@/components/auth-provider'
 import { CartProvider } from '@/components/cart-provider'
+import { CompareProvider } from '@/components/compare-provider'
 import { ToastProvider } from '@/components/ui/toast'
 import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
+import { CompareBar } from '@/components/compare-bar'
 import ScrollToTop from '@/components/scroll-to-top'
 import './globals.css'
 
@@ -38,14 +40,17 @@ export default function RootLayout({
       >
         <AuthProvider>
           <CartProvider>
-            <ToastProvider>
-              <div className="flex min-h-screen flex-col">
-                <SiteHeader />
-                <main className="flex-1">{children}</main>
-                <SiteFooter />
-              </div>
-              <ScrollToTop />
-            </ToastProvider>
+            <CompareProvider>
+              <ToastProvider>
+                <div className="flex min-h-screen flex-col">
+                  <SiteHeader />
+                  <main className="flex-1 pb-24">{children}</main>
+                  <SiteFooter />
+                </div>
+                <CompareBar />
+                <ScrollToTop />
+              </ToastProvider>
+            </CompareProvider>
           </CartProvider>
         </AuthProvider>
 
