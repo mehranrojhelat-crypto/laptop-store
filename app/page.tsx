@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   Truck,
   CreditCard,
+  Search,
 } from 'lucide-react'
 import { getFeaturedLaptops, getDealLaptops, categories } from '@/lib/products'
 import { ProductCard } from '@/components/product-card'
@@ -22,24 +23,6 @@ const categoryIcons: Record<string, typeof Cpu> = {
   دانشجویی: Cpu,
 }
 
-const features = [
-  {
-    icon: ShieldCheck,
-    title: 'گارانتی رسمی',
-    desc: '۱۸ ماه ضمانت اصالت کالا',
-  },
-  {
-    icon: Truck,
-    title: 'ارسال سریع',
-    desc: 'تحویل در کمترین زمان',
-  },
-  {
-    icon: CreditCard,
-    title: 'پرداخت امن',
-    desc: 'درگاه معتبر بانکی',
-  },
-]
-
 export default async function HomePage() {
   const featured = await getFeaturedLaptops(4)
   const deals = await getDealLaptops()
@@ -47,44 +30,150 @@ export default async function HomePage() {
   return (
     <div className="overflow-hidden">
       {/* Hero */}
-<section className="relative overflow-hidden border-b border-border">
-  {/* گرادیان متحرک */}
-  <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/20 via-background to-background" />
-  <div className="pointer-events-none absolute -left-32 top-0 size-96 rounded-full bg-primary/15 blur-3xl animate-pulse" />
-  <div className="pointer-events-none absolute -right-20 bottom-10 size-80 rounded-full bg-orange-500/10 blur-3xl" />
+      <section className="relative overflow-hidden border-b border-border">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/20 via-background to-background" />
+        <div className="pointer-events-none absolute -left-40 top-10 size-[28rem] rounded-full bg-primary/20 blur-3xl" />
+        <div className="pointer-events-none absolute -right-32 bottom-0 size-96 rounded-full bg-orange-500/15 blur-3xl" />
+        <div className="pointer-events-none absolute left-1/2 top-1/2 size-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
 
-  <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:py-24">
-    {/* ... متن سمت چپ همون قبلی بمونه، فقط دکمه‌ها رو این‌طوری کن: */}
-    <div className="mt-8 flex flex-wrap gap-3">
-      <Button asChild size="lg" className="rounded-2xl px-7 shadow-lg shadow-primary/30 transition-all hover:shadow-xl hover:shadow-primary/40 hover:-translate-y-0.5">
-        <Link href="/products">
-          مشاهده محصولات
-          <ArrowLeft className="size-4" />
-        </Link>
-      </Button>
-      <Button asChild variant="outline" size="lg" className="rounded-2xl border-primary/30 bg-background/60 backdrop-blur hover:bg-primary/5">
-        <Link href="/products?cat=گیمینگ">لپ‌تاپ‌های گیمینگ</Link>
-      </Button>
-    </div>
+        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:py-24">
+          {/* Text Content */}
+          <div className="order-2 flex flex-col items-start text-right lg:order-1">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary backdrop-blur-sm">
+              <span className="relative flex size-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75 motion-reduce:animate-none" />
+                <span className="relative inline-flex size-2 rounded-full bg-primary" />
+              </span>
+              فروشگاه تخصصی لپ‌تاپ
+            </div>
 
-    {/* تصویر هیرو */}
-    <div className="order-1 md:order-2">
-      <div className="relative mx-auto aspect-[4/3] w-full max-w-lg">
-        <div className="absolute inset-4 rounded-[2.5rem] bg-gradient-to-br from-primary/30 to-orange-600/20 blur-2xl animate-pulse" />
-        <div className="relative h-full overflow-hidden rounded-[2rem] border border-border/50 bg-card/40 p-6 shadow-2xl shadow-primary/20 backdrop-blur-md transition-transform duration-700 hover:scale-[1.02]">
-          <Image
-            src="/laptops/hero-laptop.png"
-            alt="لپ‌تاپ ویژه"
-            fill
-            priority
-            className="object-contain p-4 drop-shadow-2xl animate-[float_6s_ease-in-out_infinite]"
-          />
+            <h1 className="text-4xl font-black leading-[1.15] tracking-tight sm:text-5xl lg:text-[3.4rem]">
+              بهترین لپ‌تاپ‌ها را
+              <br />
+              <span className="bg-gradient-to-l from-primary via-orange-500 to-orange-600 bg-clip-text text-transparent">
+                با بهترین قیمت
+              </span>
+              <br />
+              پیدا کن
+            </h1>
+
+            <p className="mt-6 max-w-lg text-base leading-8 text-muted-foreground sm:text-lg">
+              از گیمینگ قدرتمند تا اولترابوک‌های سبک و لپ‌تاپ‌های اداری؛
+              همه چیز اینجا با گارانتی رسمی، ارسال سریع و پشتیبانی واقعی در
+              انتظارته.
+            </p>
+
+            {/* جستجوی سریع */}
+            <form
+              action="/products"
+              method="get"
+              className="mt-8 flex w-full max-w-lg items-center gap-2 rounded-2xl border border-border/70 bg-card/80 p-1.5 shadow-sm backdrop-blur-sm transition-colors focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/20"
+            >
+              <div className="flex min-w-0 flex-1 items-center gap-2 px-3">
+                <Search className="size-4 shrink-0 text-muted-foreground" />
+                <input
+                  type="search"
+                  name="q"
+                  placeholder="لپ‌تاپ مورد نظرت چیه؟"
+                  autoComplete="off"
+                  className="h-10 w-full min-w-0 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                />
+              </div>
+              <Button type="submit" size="sm" className="shrink-0 rounded-xl px-4">
+                جستجو
+              </Button>
+            </form>
+
+            <div className="mt-8 flex flex-wrap items-center gap-6 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <ShieldCheck className="size-4" />
+                </div>
+                <div>
+                  <p className="font-bold">۱۸ ماه</p>
+                  <p className="text-xs text-muted-foreground">گارانتی رسمی</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Truck className="size-4" />
+                </div>
+                <div>
+                  <p className="font-bold">ارسال سریع</p>
+                  <p className="text-xs text-muted-foreground">در سراسر کشور</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <CreditCard className="size-4" />
+                </div>
+                <div>
+                  <p className="font-bold">پرداخت امن</p>
+                  <p className="text-xs text-muted-foreground">درگاه معتبر</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-10 flex flex-wrap gap-3">
+              <Button
+                asChild
+                size="lg"
+                className="rounded-2xl px-8 text-base font-semibold shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/35"
+              >
+                <Link href="/products">
+                  مشاهده پرفروش‌ها
+                  <ArrowLeft className="mr-1 size-4" />
+                </Link>
+              </Button>
+
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="rounded-2xl border-primary/25 bg-background/50 px-7 text-base backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-primary/5"
+              >
+                <Link href="#deals">پیشنهادهای ویژه</Link>
+              </Button>
+            </div>
+          </div>
+
+          {/* Hero Image */}
+          <div className="order-1 lg:order-2">
+            <div className="relative mx-auto aspect-[4/3] w-full max-w-xl">
+              <div className="absolute inset-6 rounded-[2.5rem] bg-gradient-to-br from-primary/40 via-orange-500/25 to-transparent blur-3xl" />
+
+              <Link
+                href="#deals"
+                className="relative block h-full overflow-hidden rounded-[2rem] border border-border/60 bg-card/50 p-5 shadow-2xl shadow-primary/15 backdrop-blur-md transition-transform duration-500 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
+                <Image
+                  src="/laptops/hero-laptop.png"
+                  alt="لپ‌تاپ ویژه — پیشنهاد تخفیف"
+                  fill
+                  priority
+                  className="object-contain p-4 drop-shadow-2xl motion-safe:animate-[float_6s_ease-in-out_infinite]"
+                />
+              </Link>
+
+              <Link
+                href="#deals"
+                className="absolute -bottom-3 left-4 rounded-2xl border border-border/50 bg-card/90 px-4 py-3 shadow-xl backdrop-blur-md transition-colors hover:border-primary/40 hover:bg-card sm:left-8"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex size-10 items-center justify-center rounded-xl bg-primary/15 text-primary">
+                    <Sparkles className="size-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold">پیشنهاد ویژه</p>
+                    <p className="text-xs text-muted-foreground">تا ۳۰٪ تخفیف</p>
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
-
+      </section>
 
       {/* Categories */}
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
@@ -97,22 +186,21 @@ export default async function HomePage() {
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {categories.map((cat) => {
-  const Icon = categoryIcons[cat] ?? Cpu
-  return (
-    <Link
-      key={cat}
-      href={`/products?cat=${encodeURIComponent(cat)}`}
-      className="group relative flex flex-col items-center gap-4 overflow-hidden rounded-2xl border border-border/70 bg-card p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10"
-    >
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/0 to-primary/5 opacity-0 transition-opacity group-hover:opacity-100" />
-      <span className="relative flex size-14 items-center justify-center rounded-2xl bg-secondary text-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-lg group-hover:shadow-primary/30">
-        <Icon className="size-6" />
-      </span>
-      <span className="relative text-sm font-bold">{cat}</span>
-    </Link>
-  )
-})}
-
+            const Icon = categoryIcons[cat] ?? Cpu
+            return (
+              <Link
+                key={cat}
+                href={`/products?cat=${encodeURIComponent(cat)}`}
+                className="group relative flex flex-col items-center gap-4 overflow-hidden rounded-2xl border border-border/70 bg-card p-6 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10"
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-primary/0 to-primary/5 opacity-0 transition-opacity group-hover:opacity-100" />
+                <span className="relative flex size-14 items-center justify-center rounded-2xl bg-secondary text-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-lg group-hover:shadow-primary/30">
+                  <Icon className="size-6" />
+                </span>
+                <span className="relative text-sm font-bold">{cat}</span>
+              </Link>
+            )
+          })}
         </div>
       </section>
 
@@ -141,54 +229,54 @@ export default async function HomePage() {
         </div>
       </section>
 
-{/* Deals */}
-<section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
-  <div className="relative overflow-hidden rounded-3xl bg-gradient-to-l from-primary via-orange-500 to-orange-600 p-1 shadow-2xl shadow-primary/25">
-    <div className="relative rounded-[1.4rem] bg-gradient-to-l from-primary via-primary to-orange-600 px-6 py-12 sm:px-12">
-      {/* افکت‌های نور */}
-      <div className="pointer-events-none absolute -left-16 -top-16 size-56 rounded-full bg-white/20 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-20 right-0 size-72 rounded-full bg-black/20 blur-3xl" />
+      {/* Deals */}
+      <section
+        id="deals"
+        className="mx-auto max-w-7xl scroll-mt-24 px-4 py-14 sm:px-6"
+      >
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-l from-primary via-orange-500 to-orange-600 p-1 shadow-2xl shadow-primary/25">
+          <div className="relative rounded-[1.4rem] bg-gradient-to-l from-primary via-primary to-orange-600 px-6 py-12 sm:px-12">
+            <div className="pointer-events-none absolute -left-16 -top-16 size-56 rounded-full bg-white/20 blur-3xl" />
+            <div className="pointer-events-none absolute -bottom-20 right-0 size-72 rounded-full bg-black/20 blur-3xl" />
 
-      <div className="relative flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
-        <div>
-          <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-semibold backdrop-blur-sm">
-            🔥 پیشنهاد ویژه محدود
-          </span>
-          <h2 className="text-3xl font-black sm:text-4xl">
-            فروش ویژه لپ‌تاپ‌های منتخب
-          </h2>
-          <p className="mt-3 max-w-lg text-base leading-7 text-primary-foreground/90">
-            تا سقف موجودی از تخفیف‌های شگفت‌انگیز بهره‌مند شو. فرصت محدوده!
-          </p>
-        </div>
-        <Button
-          asChild
-          size="lg"
-          variant="secondary"
-          className="rounded-2xl px-8 text-base font-bold shadow-xl transition-transform hover:scale-105"
-        >
-          <Link href="/products">
-            مشاهده همه تخفیف‌ها
-            <ArrowLeft className="size-5" />
-          </Link>
-        </Button>
-      </div>
+            <div className="relative flex flex-col items-start justify-between gap-8 md:flex-row md:items-center">
+              <div>
+                <span className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-1.5 text-sm font-semibold backdrop-blur-sm">
+                  🔥 پیشنهاد ویژه محدود
+                </span>
+                <h2 className="text-3xl font-black sm:text-4xl">
+                  فروش ویژه لپ‌تاپ‌های منتخب
+                </h2>
+                <p className="mt-3 max-w-lg text-base leading-7 text-primary-foreground/90">
+                  تا سقف موجودی از تخفیف‌های شگفت‌انگیز بهره‌مند شو. فرصت محدوده!
+                </p>
+              </div>
+              <Button
+                asChild
+                size="lg"
+                variant="secondary"
+                className="rounded-2xl px-8 text-base font-bold shadow-xl transition-transform hover:scale-105"
+              >
+                <Link href="/products">
+                  مشاهده همه تخفیف‌ها
+                  <ArrowLeft className="size-5" />
+                </Link>
+              </Button>
+            </div>
 
-      {/* کارت‌ها */}
-      <div className="relative mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {deals.slice(0, 3).map((laptop) => (
-          <div
-            key={laptop.id}
-            className="rounded-2xl bg-background/95 p-1.5 shadow-xl backdrop-blur-sm ring-1 ring-white/20"
-          >
-            <ProductCard laptop={laptop} />
+            <div className="relative mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {deals.slice(0, 3).map((laptop) => (
+                <div
+                  key={laptop.id}
+                  className="rounded-2xl bg-background/95 p-1.5 shadow-xl backdrop-blur-sm ring-1 ring-white/20"
+                >
+                  <ProductCard laptop={laptop} />
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</section>
-
+        </div>
+      </section>
     </div>
   )
 }

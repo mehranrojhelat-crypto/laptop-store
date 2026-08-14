@@ -25,9 +25,10 @@ const linkGroups = [
       { label: 'پیگیری سفارش', href: '/contact' },
       { label: 'شرایط گارانتی', href: '/about' },
       { label: 'بازگشت کالا', href: '/contact' },
-      { label: 'سوالات متداول', href: '/contact' },
+      { label: 'سوالات متداول', href: '/faq' },
     ],
   },
+
   {
     title: 'درباره ما',
     links: [

@@ -22,6 +22,7 @@ import {
   Phone,
   Package,
   Loader2,
+  HelpCircle,
 } from 'lucide-react'
 import { useCart } from '@/components/cart-provider'
 import { useAuth } from '@/components/auth-provider'
@@ -43,6 +44,7 @@ const categories = [
 const pages = [
   { label: 'صفحه اصلی', href: '/', icon: Home },
   { label: 'درباره ما', href: '/about', icon: Info },
+  { label: 'سوالات متداول', href: '/faq', icon: HelpCircle },
   { label: 'تماس با ما', href: '/contact', icon: Phone },
 ]
 
@@ -67,7 +69,6 @@ export function SiteHeader() {
   const [query, setQuery] = useState('')
   const [scrolled, setScrolled] = useState(false)
 
-  // جستجوی زنده
   const [suggestions, setSuggestions] = useState<SearchResult[]>([])
   const [loadingSuggestions, setLoadingSuggestions] = useState(false)
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -75,7 +76,6 @@ export function SiteHeader() {
   const searchContainerRef = useRef<HTMLDivElement>(null)
   const mobileSearchContainerRef = useRef<HTMLDivElement>(null)
 
-  // اسکرول هدر
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
     onScroll()
@@ -83,7 +83,6 @@ export function SiteHeader() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // بستن با تغییر صفحه
   useEffect(() => {
     setDrawerOpen(false)
     setSearchOpen(false)
@@ -92,7 +91,6 @@ export function SiteHeader() {
     setSuggestions([])
   }, [pathname])
 
-  // قفل اسکرول بدن وقتی Drawer باز است + بستن با Escape
   useEffect(() => {
     if (drawerOpen) {
       document.body.style.overflow = 'hidden'
@@ -113,7 +111,6 @@ export function SiteHeader() {
     }
   }, [drawerOpen])
 
-  // بستن پیشنهادات با کلیک بیرون
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as Node
@@ -129,7 +126,6 @@ export function SiteHeader() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Debounce جستجو
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
 
@@ -184,7 +180,6 @@ export function SiteHeader() {
 
   const closeDrawer = () => setDrawerOpen(false)
 
-  // کامپوننت لیست پیشنهادات
   const SuggestionsList = ({ className }: { className?: string }) => {
     if (!showSuggestions || query.trim().length < 2) return null
 
@@ -268,7 +263,6 @@ export function SiteHeader() {
         )}
       >
         <div className="mx-auto flex h-[4.25rem] max-w-7xl items-center gap-3 px-4 sm:px-6">
-          {/* لوگو */}
           <Link href="/" className="group flex shrink-0 items-center gap-2.5">
             <span className="flex size-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-md shadow-primary/25 transition-transform duration-300 group-hover:scale-110">
               <Laptop className="size-5.5" />
@@ -283,7 +277,6 @@ export function SiteHeader() {
             </div>
           </Link>
 
-          {/* منوی دسکتاپ */}
           <nav className="mr-2 hidden items-center gap-0.5 lg:flex">
             {categories.slice(0, 5).map((item) => (
               <Link
@@ -298,7 +291,6 @@ export function SiteHeader() {
 
           <div className="flex-1" />
 
-          {/* جستجوی دسکتاپ */}
           <div
             ref={searchContainerRef}
             className="relative hidden w-full max-w-[220px] md:block lg:max-w-[280px]"
@@ -320,7 +312,6 @@ export function SiteHeader() {
             <SuggestionsList />
           </div>
 
-          {/* اکشن‌ها */}
           <div className="flex items-center gap-0.5 sm:gap-1">
             <Button
               type="button"
@@ -369,7 +360,6 @@ export function SiteHeader() {
               </Link>
             </Button>
 
-            {/* دکمه باز کردن Drawer */}
             <Button
               type="button"
               variant="ghost"
@@ -387,7 +377,6 @@ export function SiteHeader() {
           </div>
         </div>
 
-        {/* جستجوی موبایل */}
         <div
           className={cn(
             'border-t border-border/60 transition-all duration-300 md:hidden',
@@ -422,7 +411,6 @@ export function SiteHeader() {
         </div>
       </header>
 
-      {/* ========== Drawer موبایل از کنار (راست) ========== */}
       <div
         className={cn(
           'fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300 lg:hidden',
