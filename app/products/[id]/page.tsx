@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -20,6 +21,7 @@ import {
   getLaptop,
   getSimilarLaptops,
   formatPrice,
+  getLaptops,
 } from '@/lib/products'
 import { getReviews } from '@/lib/reviews'
 import { AddToCart } from '@/components/add-to-cart'
@@ -28,6 +30,69 @@ import { ReviewForm } from '@/components/reviews/review-form'
 import { ReviewList } from '@/components/reviews/review-list'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://laptopland.ir'
+
+export async function generateStaticParams() {
+  try {
+    const laptops = await getLaptops()
+    return laptops.map((laptop) => ({ id: laptop.id }))
+  } catch {
+    return []
+  }
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}): Promise<Metadata> {
+  const { id } = await params
+  const laptop = await getLaptop(id)
+
+  if (!laptop) {
+    return {
+      title: 'محصول یافت نشد',
+    }
+  }
+
+  const title = `${laptop.name} | ${laptop.brand}`
+  const description =
+    laptop.description?.slice(0, 160) ||
+    `خرید ${laptop.name} با قیمت ${formatPrice(laptop.price)} تومان — گارانتی رسمی و ارسال سریع از لپ‌تاپ‌لند.`
+
+  const imageUrl = laptop.image?.startsWith('http')
+    ? laptop.image
+    : `${siteUrl}${laptop.image || '/laptops/hero-laptop.png'}`
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `/products/${laptop.id}`,
+    },
+    openGraph: {
+      type: 'website',
+      title: `${laptop.name} | لپ‌تاپ‌لند`,
+      description,
+      url: `${siteUrl}/products/${laptop.id}`,
+      images: [
+        {
+          url: imageUrl,
+          width: 800,
+          height: 800,
+          alt: laptop.name,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${laptop.name} | لپ‌تاپ‌لند`,
+      description,
+      images: [imageUrl],
+    },
+  }
+}
 
 export default async function ProductDetailPage({
   params,
@@ -61,25 +126,75 @@ export default async function ProductDetailPage({
     { icon: Cpu, label: 'سیستم‌عامل', value: laptop.os },
   ]
 
+  const imageUrl = laptop.image?.startsWith('http')
+    ? laptop.image
+    : `${siteUrl}${laptop.image || '/placeholder.svg'}`
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: laptop.name,
+    description: laptop.description,
+    image: [imageUrl],
+    brand: {
+      '@type': 'Brand',
+      name: laptop.brand,
+    },
+    sku: laptop.id,
+    category: laptop.category,
+    offers: {
+      '@type': 'Offer',
+      url: `${siteUrl}/products/${laptop.id}`,
+      priceCurrency: 'IRR',
+      price: laptop.price,
+      availability: laptop.inStock
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
+      itemCondition: 'https://schema.org/NewCondition',
+      seller: {
+        '@type': 'Organization',
+        name: 'لپ‌تاپ‌لند',
+      },
+    },
+    aggregateRating:
+      laptop.reviews > 0
+        ? {
+            '@type': 'AggregateRating',
+            ratingValue: laptop.rating,
+            reviewCount: laptop.reviews,
+            bestRating: 5,
+            worstRating: 1,
+          }
+        : undefined,
+  }
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Breadcrumb */}
-      <nav className="flex flex-wrap items-center gap-1 text-sm text-muted-foreground">
+      <nav
+        className="flex flex-wrap items-center gap-1 text-sm text-muted-foreground"
+        aria-label="مسیر صفحه"
+      >
         <Link href="/" className="hover:text-foreground">
           خانه
         </Link>
-        <ChevronLeft className="size-4 shrink-0" />
+        <ChevronLeft className="size-4 shrink-0" aria-hidden />
         <Link href="/products" className="hover:text-foreground">
           محصولات
         </Link>
-        <ChevronLeft className="size-4 shrink-0" />
+        <ChevronLeft className="size-4 shrink-0" aria-hidden />
         <Link
           href={`/products?cat=${encodeURIComponent(laptop.category)}`}
           className="hover:text-foreground"
         >
           {laptop.category}
         </Link>
-        <ChevronLeft className="size-4 shrink-0" />
+        <ChevronLeft className="size-4 shrink-0" aria-hidden />
         <span className="text-foreground line-clamp-1">{laptop.name}</span>
       </nav>
 
@@ -88,7 +203,7 @@ export default async function ProductDetailPage({
         <div className="relative aspect-square overflow-hidden rounded-2xl border border-border bg-secondary">
           <Image
             src={laptop.image || '/placeholder.svg'}
-            alt={laptop.name}
+            alt={`${laptop.name} — ${laptop.brand} ${laptop.category}`}
             fill
             priority
             sizes="(max-width: 1024px) 100vw, 50vw"

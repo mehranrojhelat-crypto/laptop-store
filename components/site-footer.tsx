@@ -30,7 +30,7 @@ const linkGroups = [
     links: [
       { label: 'پیگیری سفارش', href: '/contact' },
       { label: 'شرایط گارانتی', href: '/about' },
-      { label: 'بازگشت کالا', href: '/contact' },
+      { label: 'بازگشت کالا', href: '/returns' },
       { label: 'سوالات متداول', href: '/faq' },
     ],
   },
@@ -181,9 +181,21 @@ export function SiteFooter() {
           ))}
         </div>
 
-        {/* Bottom bar */}
-        <div className="flex flex-col items-center justify-between gap-3 border-t border-border py-6 text-sm text-muted-foreground sm:flex-row">
+        {/* Bottom bar + Demo Trust Badge */}
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-border py-6 text-sm text-muted-foreground sm:flex-row">
           <p>© ۱۴۰۴ لپ‌تاپ‌لند. تمامی حقوق محفوظ است.</p>
+
+          {/* نماد دمو / شبیه‌سازی‌شده */}
+          <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 shadow-sm">
+            <div className="flex size-10 items-center justify-center rounded-md bg-emerald-600 text-white">
+              <ShieldCheck className="size-5" />
+            </div>
+            <div className="text-right leading-tight">
+              <p className="text-xs font-bold text-foreground">نماد اعتماد</p>
+              <p className="text-[10px] text-muted-foreground">فروشگاه معتبر</p>
+            </div>
+          </div>
+
           <p>ساخته‌شده با دقت برای علاقه‌مندان تکنولوژی</p>
         </div>
       </div>

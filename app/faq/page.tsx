@@ -3,10 +3,15 @@ import Link from 'next/link'
 import { HelpCircle, MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://laptopland.ir'
+
 export const metadata: Metadata = {
-  title: 'سوالات متداول | لپ‌تاپ‌لند',
+  title: 'سوالات متداول',
   description:
     'پاسخ سوالات رایج درباره خرید لپ‌تاپ، گارانتی، ارسال، پرداخت و بازگشت کالا در لپ‌تاپ‌لند.',
+  alternates: {
+    canonical: '/faq',
+  },
 }
 
 const faqs = [
@@ -73,8 +78,29 @@ const faqs = [
 ]
 
 export default function FaqPage() {
+  const allFaqItems = faqs.flatMap((g) => g.items)
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: allFaqItems.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.a,
+      },
+    })),
+    url: `${siteUrl}/faq`,
+  }
+
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       <div className="mb-10 text-center">
         <div className="mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
           <HelpCircle className="size-7" />

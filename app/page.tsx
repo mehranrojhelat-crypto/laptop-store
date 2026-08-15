@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import {
@@ -15,6 +16,31 @@ import { getFeaturedLaptops, getDealLaptops, categories } from '@/lib/products'
 import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://laptopland.ir'
+
+export const metadata: Metadata = {
+  title: 'لپ‌تاپ‌لند | فروشگاه تخصصی لپ‌تاپ',
+  description:
+    'بهترین لپ‌تاپ‌های گیمینگ، اولترابوک، اداری، مهندسی و دانشجویی را با قیمت مناسب، گارانتی ۱۸ ماهه و ارسال سریع از لپ‌تاپ‌لند بخرید.',
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'لپ‌تاپ‌لند | فروشگاه تخصصی لپ‌تاپ',
+    description:
+      'خرید آنلاین لپ‌تاپ با بهترین قیمت، گارانتی رسمی و ارسال سریع به سراسر کشور.',
+    url: siteUrl,
+    images: [
+      {
+        url: '/laptops/hero-laptop.png',
+        width: 1200,
+        height: 630,
+        alt: 'لپ‌تاپ‌لند',
+      },
+    ],
+  },
+}
+
 const categoryIcons: Record<string, typeof Cpu> = {
   گیمینگ: Gamepad2,
   اولترابوک: Sparkles,
@@ -27,8 +53,52 @@ export default async function HomePage() {
   const featured = await getFeaturedLaptops(4)
   const deals = await getDealLaptops()
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': `${siteUrl}/#website`,
+        url: siteUrl,
+        name: 'لپ‌تاپ‌لند',
+        description:
+          'فروشگاه تخصصی لپ‌تاپ با گارانتی رسمی و ارسال سریع',
+        inLanguage: 'fa-IR',
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: {
+            '@type': 'EntryPoint',
+            urlTemplate: `${siteUrl}/products?q={search_term_string}`,
+          },
+          'query-input': 'required name=search_term_string',
+        },
+      },
+      {
+        '@type': 'Organization',
+        '@id': `${siteUrl}/#organization`,
+        name: 'لپ‌تاپ‌لند',
+        url: siteUrl,
+        logo: {
+          '@type': 'ImageObject',
+          url: `${siteUrl}/laptops/hero-laptop.png`,
+        },
+        contactPoint: {
+          '@type': 'ContactPoint',
+          telephone: '+98-21-91000000',
+          contactType: 'customer service',
+          availableLanguage: 'Persian',
+        },
+      },
+    ],
+  }
+
   return (
     <div className="overflow-hidden">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/20 via-background to-background" />
@@ -149,9 +219,10 @@ export default async function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
                 <Image
                   src="/laptops/hero-laptop.png"
-                  alt="لپ‌تاپ ویژه — پیشنهاد تخفیف"
+                  alt="لپ‌تاپ ویژه — پیشنهاد تخفیف لپ‌تاپ‌لند"
                   fill
                   priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-contain p-4 drop-shadow-2xl motion-safe:animate-[float_6s_ease-in-out_infinite]"
                 />
               </Link>

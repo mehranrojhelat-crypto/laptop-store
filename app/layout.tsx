@@ -15,18 +15,66 @@ const vazirmatn = Vazirmatn({
   subsets: ['arabic', 'latin'],
   variable: '--font-vazirmatn',
   display: 'swap',
+  preload: true,
 })
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+
 export const metadata: Metadata = {
-  title: 'لپ‌تاپ‌لند | فروشگاه تخصصی لپ‌تاپ',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'لپ‌تاپ‌لند | فروشگاه تخصصی لپ‌تاپ',
+    template: '%s | لپ‌تاپ‌لند',
+  },
   description:
-    'خرید آنلاین لپ‌تاپ گیمینگ، اولترابوک، لپ‌تاپ اداری و مهندسی با بهترین قیمت و گارانتی رسمی.',
-  generator: 'v0.app',
+    'خرید آنلاین لپ‌تاپ گیمینگ، اولترابوک، اداری، مهندسی و دانشجویی با بهترین قیمت، گارانتی رسمی ۱۸ ماهه و ارسال سریع.',
+  keywords: [
+    'خرید لپ‌تاپ',
+    'لپ‌تاپ گیمینگ',
+    'اولترابوک',
+    'لپ‌تاپ اداری',
+    'لپ‌تاپ دانشجویی',
+    'فروشگاه لپ‌تاپ',
+    'لپ‌تاپ‌لند',
+  ],
+  authors: [{ name: 'لپ‌تاپ‌لند' }],
+  creator: 'لپ‌تاپ‌لند',
+  publisher: 'لپ‌تاپ‌لند',
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'fa_IR',
+    url: siteUrl,
+    siteName: 'لپ‌تاپ‌لند',
+    title: 'لپ‌تاپ‌لند | فروشگاه تخصصی لپ‌تاپ',
+    description:
+      'خرید آنلاین لپ‌تاپ گیمینگ، اولترابوک، اداری و مهندسی با بهترین قیمت و گارانتی رسمی.',
+    images: [
+      {
+        url: '/laptops/hero-laptop.png',
+        width: 1200,
+        height: 630,
+        alt: 'لپ‌تاپ‌لند — فروشگاه تخصصی لپ‌تاپ',
+      },
+    ],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export const viewport: Viewport = {
-  colorScheme: 'light',
-  themeColor: '#e8823d',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  colorScheme: 'light dark',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#e8823d' },
+    { media: '(prefers-color-scheme: dark)', color: '#1a1a1a' },
+  ],
 }
 
 export default function RootLayout({

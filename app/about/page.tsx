@@ -1,6 +1,16 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Laptop, ShieldCheck, Truck, Headphones, Award } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+
+export const metadata: Metadata = {
+  title: 'درباره ما',
+  description:
+    'آشنایی با فروشگاه لپ‌تاپ‌لند؛ ماموریت، ارزش‌ها و دلیل اعتماد هزاران مشتری به خرید آنلاین لپ‌تاپ با گارانتی رسمی.',
+  alternates: {
+    canonical: '/about',
+  },
+}
 
 const values = [
   {

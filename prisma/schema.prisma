@@ -33,22 +33,32 @@ model Laptop {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  reviewList  Review[]   // ← اضافه شد
+  reviewList  Review[]
 }
 
 model Review {
-  id        String   @id @default(cuid())
-  laptopId  String
-  laptop    Laptop   @relation(fields: [laptopId], references: [id], onDelete: Cascade)
+  id         String   @id @default(cuid())
+  laptopId   String
+  laptop     Laptop   @relation(fields: [laptopId], references: [id], onDelete: Cascade)
 
   authorName String
-  rating     Int      // 1 تا 5
+  rating     Int
   comment    String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  // برای ویرایش: یک توکن ساده که موقع ثبت نظر به کاربر می‌دیم
   editToken  String
 
   @@index([laptopId])
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
 }

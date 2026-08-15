@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import {
@@ -117,7 +118,10 @@ export default function ReturnsPage() {
           </div>
           <ul className="space-y-3">
             {allowed.map((item) => (
-              <li key={item} className="flex items-start gap-2 text-sm leading-6 text-muted-foreground">
+              <li
+                key={item}
+                className="flex items-start gap-2 text-sm leading-6 text-muted-foreground"
+              >
                 <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-green-600" />
                 {item}
               </li>
@@ -132,7 +136,10 @@ export default function ReturnsPage() {
           </div>
           <ul className="space-y-3">
             {notAllowed.map((item) => (
-              <li key={item} className="flex items-start gap-2 text-sm leading-6 text-muted-foreground">
+              <li
+                key={item}
+                className="flex items-start gap-2 text-sm leading-6 text-muted-foreground"
+              >
                 <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-destructive" />
                 {item}
               </li>
