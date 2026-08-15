@@ -65,7 +65,7 @@ export async function getDealLaptops(): Promise<Laptop[]> {
   return data.map(mapLaptop)
 }
 
-export const brands = ['نکسوس', 'والکان', 'آریا', 'تیتان', 'آرورا', 'سایبر']
+export const brands = ['ایسوس', 'ام‌اس‌آی', 'لنوو', 'اچ‌پی', 'دل', 'ایسر']
 
 export const categories = [
   'گیمینگ',
