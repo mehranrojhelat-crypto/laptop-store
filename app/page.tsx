@@ -1,4 +1,3 @@
-import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import {
@@ -11,35 +10,13 @@ import {
   Truck,
   CreditCard,
   Search,
+  Clock,
+  BookOpen,
 } from 'lucide-react'
 import { getFeaturedLaptops, getDealLaptops, categories } from '@/lib/products'
+import { getAllArticles } from '@/lib/articles'
 import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://laptopland.ir'
-
-export const metadata: Metadata = {
-  title: 'لپ‌تاپ‌لند | فروشگاه تخصصی لپ‌تاپ',
-  description:
-    'بهترین لپ‌تاپ‌های گیمینگ، اولترابوک، اداری، مهندسی و دانشجویی را با قیمت مناسب، گارانتی ۱۸ ماهه و ارسال سریع از لپ‌تاپ‌لند بخرید.',
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-    title: 'لپ‌تاپ‌لند | فروشگاه تخصصی لپ‌تاپ',
-    description:
-      'خرید آنلاین لپ‌تاپ با بهترین قیمت، گارانتی رسمی و ارسال سریع به سراسر کشور.',
-    url: siteUrl,
-    images: [
-      {
-        url: '/laptops/hero-laptop.png',
-        width: 1200,
-        height: 630,
-        alt: 'لپ‌تاپ‌لند',
-      },
-    ],
-  },
-}
 
 const categoryIcons: Record<string, typeof Cpu> = {
   گیمینگ: Gamepad2,
@@ -52,53 +29,10 @@ const categoryIcons: Record<string, typeof Cpu> = {
 export default async function HomePage() {
   const featured = await getFeaturedLaptops(4)
   const deals = await getDealLaptops()
-
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'WebSite',
-        '@id': `${siteUrl}/#website`,
-        url: siteUrl,
-        name: 'لپ‌تاپ‌لند',
-        description:
-          'فروشگاه تخصصی لپ‌تاپ با گارانتی رسمی و ارسال سریع',
-        inLanguage: 'fa-IR',
-        potentialAction: {
-          '@type': 'SearchAction',
-          target: {
-            '@type': 'EntryPoint',
-            urlTemplate: `${siteUrl}/products?q={search_term_string}`,
-          },
-          'query-input': 'required name=search_term_string',
-        },
-      },
-      {
-        '@type': 'Organization',
-        '@id': `${siteUrl}/#organization`,
-        name: 'لپ‌تاپ‌لند',
-        url: siteUrl,
-        logo: {
-          '@type': 'ImageObject',
-          url: `${siteUrl}/laptops/hero-laptop.png`,
-        },
-        contactPoint: {
-          '@type': 'ContactPoint',
-          telephone: '+98-21-91000000',
-          contactType: 'customer service',
-          availableLanguage: 'Persian',
-        },
-      },
-    ],
-  }
+  const latestArticles = getAllArticles().slice(0, 3)
 
   return (
     <div className="overflow-hidden">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/20 via-background to-background" />
@@ -107,7 +41,6 @@ export default async function HomePage() {
         <div className="pointer-events-none absolute left-1/2 top-1/2 size-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/5 blur-3xl" />
 
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:py-24">
-          {/* Text Content */}
           <div className="order-2 flex flex-col items-start text-right lg:order-1">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary backdrop-blur-sm">
               <span className="relative flex size-2">
@@ -133,7 +66,6 @@ export default async function HomePage() {
               انتظارته.
             </p>
 
-            {/* جستجوی سریع */}
             <form
               action="/products"
               method="get"
@@ -207,7 +139,6 @@ export default async function HomePage() {
             </div>
           </div>
 
-          {/* Hero Image */}
           <div className="order-1 lg:order-2">
             <div className="relative mx-auto aspect-[4/3] w-full max-w-xl">
               <div className="absolute inset-6 rounded-[2.5rem] bg-gradient-to-br from-primary/40 via-orange-500/25 to-transparent blur-3xl" />
@@ -219,10 +150,9 @@ export default async function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
                 <Image
                   src="/laptops/hero-laptop.png"
-                  alt="لپ‌تاپ ویژه — پیشنهاد تخفیف لپ‌تاپ‌لند"
+                  alt="لپ‌تاپ ویژه — پیشنهاد تخفیف"
                   fill
                   priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
                   className="object-contain p-4 drop-shadow-2xl motion-safe:animate-[float_6s_ease-in-out_infinite]"
                 />
               </Link>
@@ -348,6 +278,71 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Blog / Articles */}
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+        <div className="mb-7 flex items-end justify-between gap-4">
+          <div>
+            <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+              <BookOpen className="size-3.5" />
+              وبلاگ لپ‌تاپ‌لند
+            </div>
+            <h2 className="text-2xl font-bold tracking-tight">آخرین مقالات</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              بررسی محصولات فروشگاه و راهنمای خرید
+            </p>
+          </div>
+          <Link
+            href="/blog"
+            className="flex items-center gap-1 rounded-lg px-2 py-1 text-sm font-semibold text-primary transition-colors hover:bg-primary/10"
+          >
+            همه مقالات
+            <ArrowLeft className="size-4" />
+          </Link>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {latestArticles.map((post) => (
+            <Link
+              key={post.slug}
+              href={`/blog/${post.slug}`}
+              className="group flex flex-col overflow-hidden rounded-2xl border border-border/70 bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10"
+            >
+              <div className="relative aspect-[16/10] bg-secondary">
+                <Image
+                  src={post.image}
+                  alt={post.title}
+                  fill
+                  className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+              </div>
+              <div className="flex flex-1 flex-col p-5">
+                <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                  <span className="rounded-full bg-primary/10 px-2.5 py-1 font-medium text-primary">
+                    {post.category}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Clock className="size-3.5" />
+                    {post.readTime}
+                  </span>
+                </div>
+                <h3 className="text-base font-bold leading-snug transition-colors group-hover:text-primary sm:text-lg">
+                  {post.title}
+                </h3>
+                <p className="mt-2 flex-1 text-sm leading-7 text-muted-foreground line-clamp-3">
+                  {post.excerpt}
+                </p>
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary">
+                  ادامه مطلب
+                  <ArrowLeft className="size-4 transition-transform group-hover:-translate-x-0.5" />
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
     </div>
   )
 }

@@ -1,3 +1,5 @@
+
+import Image from 'next/image'
 import Link from 'next/link'
 import {
   Laptop,
@@ -40,18 +42,25 @@ const linkGroups = [
       { label: 'معرفی فروشگاه', href: '/about' },
       { label: 'تماس با ما', href: '/contact' },
       { label: 'فرصت‌های شغلی', href: '/contact' },
-      { label: 'وبلاگ', href: '/products' },
+      { label: 'وبلاگ', href: '/blog' },
     ],
   },
 ]
 
-// لینک‌های واقعی خودت رو اینجا بگذار
 const socialLinks = [
   {
     name: 'اینستاگرام',
     href: 'https://instagram.com/yourpage',
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4.5">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="size-4.5"
+      >
         <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
         <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
         <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
@@ -62,7 +71,15 @@ const socialLinks = [
     name: 'تلگرام',
     href: 'https://t.me/yourchannel',
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4.5">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="size-4.5"
+      >
         <path d="m22 2-7 20-4-9-9-4Z" />
         <path d="M22 2 11 13" />
       </svg>
@@ -72,7 +89,15 @@ const socialLinks = [
     name: 'واتساپ',
     href: 'https://wa.me/989123456789',
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4.5">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="size-4.5"
+      >
         <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
         <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
         <line x1="12" x2="12.01" y1="17" y2="17" />
@@ -83,7 +108,15 @@ const socialLinks = [
     name: 'یوتیوب',
     href: 'https://youtube.com/@yourchannel',
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4.5">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="size-4.5"
+      >
         <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
         <path d="m10 15 5-3-5-3z" />
       </svg>
@@ -93,7 +126,15 @@ const socialLinks = [
     name: 'لینکدین',
     href: 'https://linkedin.com/company/yourpage',
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4.5">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="size-4.5"
+      >
         <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
         <rect width="4" height="12" x="2" y="9" />
         <circle cx="4" cy="4" r="2" />
@@ -104,7 +145,15 @@ const socialLinks = [
     name: 'توییتر / X',
     href: 'https://x.com/yourpage',
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4.5">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="size-4.5"
+      >
         <path d="M4 4l11.733 16h4.267l-11.733-16z" />
         <path d="M4 20l6.768-6.768M15.232 10.232 20 4" />
       </svg>
@@ -181,22 +230,17 @@ export function SiteFooter() {
           ))}
         </div>
 
-        {/* Bottom bar + Demo Trust Badge */}
+        {/* Bottom bar: کپی‌رایت راست | اینماد چپ */}
         <div className="flex flex-col items-center justify-between gap-4 border-t border-border py-6 text-sm text-muted-foreground sm:flex-row">
           <p>© ۱۴۰۴ لپ‌تاپ‌لند. تمامی حقوق محفوظ است.</p>
 
-          {/* نماد دمو / شبیه‌سازی‌شده */}
-          <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-3 py-2 shadow-sm">
-            <div className="flex size-10 items-center justify-center rounded-md bg-emerald-600 text-white">
-              <ShieldCheck className="size-5" />
-            </div>
-            <div className="text-right leading-tight">
-              <p className="text-xs font-bold text-foreground">نماد اعتماد</p>
-              <p className="text-[10px] text-muted-foreground">فروشگاه معتبر</p>
-            </div>
-          </div>
-
-          <p>ساخته‌شده با دقت برای علاقه‌مندان تکنولوژی</p>
+          <Image
+            src="/enamad.png"
+            alt="نماد اعتماد الکترونیکی"
+            width={125}
+            height={125}
+            className="h-[7.5rem] w-auto object-contain sm:ms-auto"
+          />
         </div>
       </div>
     </footer>

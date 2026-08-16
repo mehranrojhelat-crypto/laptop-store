@@ -3,8 +3,15 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowLeft, CheckCircle2, CreditCard, Wallet } from 'lucide-react'
+import {
+  ArrowLeft,
+  CheckCircle2,
+  CreditCard,
+  Wallet,
+  Loader2,
+} from 'lucide-react'
 import { useCart } from '@/components/cart-provider'
+import { useAuth } from '@/components/auth-provider'
 import { formatPrice } from '@/lib/products'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,22 +19,72 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 
-const SHIPPING = 500000
+const SHIPPING = 500_000
 
 export default function CheckoutPage() {
   const { items, subtotal, clear, count } = useCart()
+  const { user } = useAuth()
+
   const [done, setDone] = useState(false)
-  const [orderId, setOrderId] = useState('')
-  const [payment, setPayment] = useState('online')
+  const [trackingCode, setTrackingCode] = useState('')
+  const [payment, setPayment] = useState<'online' | 'cod'>('online')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [phone, setPhone] = useState('')
+  const [city, setCity] = useState('')
+  const [address, setAddress] = useState('')
+  const [postalCode, setPostalCode] = useState('')
+  const [note, setNote] = useState('')
 
   const total = subtotal + SHIPPING
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const id = Math.floor(100000 + Math.random() * 900000).toString()
-    setOrderId(id)
-    setDone(true)
-    clear()
+    setError('')
+    setLoading(true)
+
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          phone,
+          city,
+          address,
+          postalCode,
+          paymentMethod: payment,
+          note: note || undefined,
+          items: items.map((i) => ({
+            id: i.id,
+            quantity: i.quantity,
+          })),
+          userId: user?.id ?? null,
+          userEmail: user?.email ?? null,
+          userName: user?.name ?? null,
+        }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok || !data.ok) {
+        setError(data.message || 'ثبت سفارش ناموفق بود.')
+        setLoading(false)
+        return
+      }
+
+      setTrackingCode(data.order.trackingCode)
+      setDone(true)
+      clear()
+    } catch {
+      setError('خطای شبکه. لطفاً دوباره تلاش کنید.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (done) {
@@ -39,17 +96,25 @@ export default function CheckoutPage() {
         <h1 className="mt-5 text-2xl font-bold">سفارش شما ثبت شد</h1>
         <p className="mt-2 text-sm text-muted-foreground text-pretty">
           از خرید شما سپاسگزاریم. کد پیگیری سفارش شما{' '}
-          <span className="font-bold text-foreground">
-            {orderId.toLocaleString('fa-IR')}
+          <span className="font-bold text-foreground" dir="ltr">
+            {trackingCode}
           </span>{' '}
           است.
         </p>
-        <Button asChild className="mt-6">
-          <Link href="/products">
-            ادامه خرید
-            <ArrowLeft className="size-4" />
-          </Link>
-        </Button>
+        <p className="mt-2 text-xs text-muted-foreground">
+          می‌توانید این کد را برای پیگیری سفارش نگه دارید.
+        </p>
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Button asChild>
+            <Link href="/products">
+              ادامه خرید
+              <ArrowLeft className="size-4" />
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href="/">بازگشت به صفحه اصلی</Link>
+          </Button>
+        </div>
       </div>
     )
   }
@@ -77,17 +142,30 @@ export default function CheckoutPage() {
         className="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]"
       >
         <div className="flex flex-col gap-6">
-          {/* Contact + address */}
           <section className="rounded-xl border border-border bg-card p-5">
             <h2 className="mb-4 font-semibold">اطلاعات گیرنده</h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="firstName">نام</Label>
-                <Input id="firstName" required placeholder="مثال: علی" />
+                <Input
+                  id="firstName"
+                  required
+                  placeholder="مثال: علی"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  disabled={loading}
+                />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="lastName">نام خانوادگی</Label>
-                <Input id="lastName" required placeholder="مثال: رضایی" />
+                <Input
+                  id="lastName"
+                  required
+                  placeholder="مثال: رضایی"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  disabled={loading}
+                />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="phone">شماره موبایل</Label>
@@ -96,11 +174,21 @@ export default function CheckoutPage() {
                   required
                   inputMode="numeric"
                   placeholder="۰۹۱۲۳۴۵۶۷۸۹"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  disabled={loading}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
                 <Label htmlFor="city">شهر</Label>
-                <Input id="city" required placeholder="تهران" />
+                <Input
+                  id="city"
+                  required
+                  placeholder="تهران"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  disabled={loading}
+                />
               </div>
               <div className="flex flex-col gap-1.5 sm:col-span-2">
                 <Label htmlFor="address">نشانی کامل</Label>
@@ -108,6 +196,9 @@ export default function CheckoutPage() {
                   id="address"
                   required
                   placeholder="خیابان، کوچه، پلاک و واحد"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  disabled={loading}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
@@ -117,18 +208,31 @@ export default function CheckoutPage() {
                   required
                   inputMode="numeric"
                   placeholder="۱۰ رقمی"
+                  value={postalCode}
+                  onChange={(e) => setPostalCode(e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+              <div className="flex flex-col gap-1.5 sm:col-span-2">
+                <Label htmlFor="note">توضیحات (اختیاری)</Label>
+                <Input
+                  id="note"
+                  placeholder="مثلاً ساعت تماس ترجیحی"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  disabled={loading}
                 />
               </div>
             </div>
           </section>
 
-          {/* Payment */}
           <section className="rounded-xl border border-border bg-card p-5">
             <h2 className="mb-4 font-semibold">روش پرداخت</h2>
             <RadioGroup
               value={payment}
-              onValueChange={setPayment}
+              onValueChange={(v) => setPayment(v as 'online' | 'cod')}
               className="grid gap-3 sm:grid-cols-2"
+              disabled={loading}
             >
               <Label
                 htmlFor="online"
@@ -148,9 +252,14 @@ export default function CheckoutPage() {
               </Label>
             </RadioGroup>
           </section>
+
+          {error && (
+            <div className="rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              {error}
+            </div>
+          )}
         </div>
 
-        {/* Summary */}
         <aside>
           <div className="sticky top-24 rounded-xl border border-border bg-card p-5">
             <h2 className="font-semibold">
@@ -199,8 +308,20 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            <Button type="submit" size="lg" className="mt-5 w-full">
-              ثبت و پرداخت سفارش
+            <Button
+              type="submit"
+              size="lg"
+              className="mt-5 w-full"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="size-4 animate-spin" />
+                  در حال ثبت...
+                </>
+              ) : (
+                'ثبت و پرداخت سفارش'
+              )}
             </Button>
             <p className="mt-3 text-center text-xs text-muted-foreground">
               با ثبت سفارش، قوانین فروشگاه را می‌پذیرید.

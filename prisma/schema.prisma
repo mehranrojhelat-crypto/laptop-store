@@ -34,6 +34,7 @@ model Laptop {
   updatedAt   DateTime @updatedAt
 
   reviewList  Review[]
+  orderItems  OrderItem[]
 }
 
 model Review {
@@ -61,4 +62,63 @@ model ContactMessage {
   message   String
   isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+model Order {
+  id            String   @id @default(cuid())
+
+  // کد پیگیری کوتاه برای نمایش به کاربر
+  trackingCode  String   @unique
+
+  // اطلاعات گیرنده
+  firstName     String
+  lastName      String
+  phone         String
+  city          String
+  address       String
+  postalCode    String
+
+  // پرداخت و وضعیت
+  paymentMethod String   // online | cod
+  status        String   @default("PENDING") // PENDING | PAID | SHIPPED | DELIVERED | CANCELLED
+
+  // مبالغ (تومان)
+  subtotal      Int
+  shipping      Int
+  total         Int
+
+  // اگر کاربر لاگین باشد (از localStorage)
+  userId        String?
+  userEmail     String?
+  userName      String?
+
+  note          String?
+
+  items         OrderItem[]
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([trackingCode])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id         String @id @default(cuid())
+  orderId    String
+  order      Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  laptopId   String
+  laptop     Laptop @relation(fields: [laptopId], references: [id])
+
+  // snapshot قیمت و مشخصات لحظه خرید
+  name       String
+  brand      String
+  image      String
+  price      Int
+  quantity   Int
+
+  @@index([orderId])
+  @@index([laptopId])
 }

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { prisma } from '@/lib/prisma'
+import { getAllArticles } from '@/lib/articles'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://laptopland.ir'
 
@@ -41,6 +42,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.5,
     },
+    {
+      url: `${siteUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.75,
+    },
   ]
 
   let productPages: MetadataRoute.Sitemap = []
@@ -61,5 +68,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // اگر دیتابیس در زمان build در دسترس نبود، فقط صفحات استاتیک
   }
 
-  return [...staticPages, ...productPages]
+  const articlePages: MetadataRoute.Sitemap = getAllArticles().map((article) => ({
+    url: `${siteUrl}/blog/${article.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.65,
+  }))
+
+  return [...staticPages, ...productPages, ...articlePages]
 }
