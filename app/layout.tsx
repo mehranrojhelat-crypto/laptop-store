@@ -9,6 +9,7 @@ import { SiteHeader } from '@/components/site-header'
 import { SiteFooter } from '@/components/site-footer'
 import { CompareBar } from '@/components/compare-bar'
 import ScrollToTop from '@/components/scroll-to-top'
+import { SupportChat } from '@/components/support-chat'
 import './globals.css'
 
 const vazirmatn = Vazirmatn({
@@ -97,6 +98,7 @@ export default function RootLayout({
                 </div>
                 <CompareBar />
                 <ScrollToTop />
+                <SupportChat />
               </ToastProvider>
             </CompareProvider>
           </CartProvider>

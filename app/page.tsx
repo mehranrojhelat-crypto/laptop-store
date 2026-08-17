@@ -17,6 +17,7 @@ import { getFeaturedLaptops, getDealLaptops, categories } from '@/lib/products'
 import { getAllArticles } from '@/lib/articles'
 import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
+import { HeroCarousel } from '@/components/hero-carousel'
 
 const categoryIcons: Record<string, typeof Cpu> = {
   گیمینگ: Gamepad2,
@@ -140,38 +141,7 @@ export default async function HomePage() {
           </div>
 
           <div className="order-1 lg:order-2">
-            <div className="relative mx-auto aspect-[4/3] w-full max-w-xl">
-              <div className="absolute inset-6 rounded-[2.5rem] bg-gradient-to-br from-primary/40 via-orange-500/25 to-transparent blur-3xl" />
-
-              <Link
-                href="#deals"
-                className="relative block h-full overflow-hidden rounded-[2rem] border border-border/60 bg-card/50 p-5 shadow-2xl shadow-primary/15 backdrop-blur-md transition-transform duration-500 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-              >
-                <div className="absolute inset-0 bg-gradient-to-t from-background/40 via-transparent to-transparent" />
-                <Image
-                  src="/laptops/hero-laptop.png"
-                  alt="لپ‌تاپ ویژه — پیشنهاد تخفیف"
-                  fill
-                  priority
-                  className="object-contain p-4 drop-shadow-2xl motion-safe:animate-[float_6s_ease-in-out_infinite]"
-                />
-              </Link>
-
-              <Link
-                href="#deals"
-                className="absolute -bottom-3 left-4 rounded-2xl border border-border/50 bg-card/90 px-4 py-3 shadow-xl backdrop-blur-md transition-colors hover:border-primary/40 hover:bg-card sm:left-8"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="flex size-10 items-center justify-center rounded-xl bg-primary/15 text-primary">
-                    <Sparkles className="size-5" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold">پیشنهاد ویژه</p>
-                    <p className="text-xs text-muted-foreground">تا ۳۰٪ تخفیف</p>
-                  </div>
-                </div>
-              </Link>
-            </div>
+            <HeroCarousel />
           </div>
         </div>
       </section>
@@ -342,7 +312,6 @@ export default async function HomePage() {
           ))}
         </div>
       </section>
-
     </div>
   )
 }
