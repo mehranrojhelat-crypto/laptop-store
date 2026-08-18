@@ -18,6 +18,7 @@ import { getAllArticles } from '@/lib/articles'
 import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
 import { HeroCarousel } from '@/components/hero-carousel'
+import { ProductCarousel } from '@/components/product-carousel'
 
 const categoryIcons: Record<string, typeof Cpu> = {
   گیمینگ: Gamepad2,
@@ -28,7 +29,7 @@ const categoryIcons: Record<string, typeof Cpu> = {
 }
 
 export default async function HomePage() {
-  const featured = await getFeaturedLaptops(4)
+  const featured = await getFeaturedLaptops(8) // بیشتر از قبل برای اسلایدر
   const deals = await getDealLaptops()
   const latestArticles = getAllArticles().slice(0, 3)
 
@@ -175,7 +176,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Featured */}
+      {/* Featured - حالا اسلایدر */}
       <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
         <div className="mb-7 flex items-end justify-between gap-4">
           <div>
@@ -193,14 +194,15 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-          {featured.map((laptop) => (
-            <ProductCard key={laptop.id} laptop={laptop} />
-          ))}
-        </div>
+        <ProductCarousel
+          products={featured}
+          slidesToShow={4}
+          variant="default"
+          interval={4500}
+        />
       </section>
 
-      {/* Deals */}
+      {/* Deals - حالا اسلایدر */}
       <section
         id="deals"
         className="mx-auto max-w-7xl scroll-mt-24 px-4 py-14 sm:px-6"
@@ -235,15 +237,13 @@ export default async function HomePage() {
               </Button>
             </div>
 
-            <div className="relative mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {deals.slice(0, 3).map((laptop) => (
-                <div
-                  key={laptop.id}
-                  className="rounded-2xl bg-background/95 p-1.5 shadow-xl backdrop-blur-sm ring-1 ring-white/20"
-                >
-                  <ProductCard laptop={laptop} />
-                </div>
-              ))}
+            <div className="relative mt-10">
+              <ProductCarousel
+                products={deals}
+                slidesToShow={3}
+                variant="deal"
+                interval={5000}
+              />
             </div>
           </div>
         </div>
