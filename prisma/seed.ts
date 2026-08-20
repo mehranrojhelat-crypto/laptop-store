@@ -11,7 +11,12 @@ const laptops = [
     category: 'اولترابوک',
     price: 92500000,
     oldPrice: 105000000,
-    image: '/laptops/pro-ultra-14.jpg',
+    image: '/laptops/asus-zenbook-14-ultra.jpg',
+    images: JSON.stringify([
+      '/laptops/asus-zenbook-14-ultra.jpg',
+      '/laptops/asus-zenbook-14-ultra-2.jpg',
+      '/laptops/asus-zenbook-14-ultra-3.jpg',
+    ]),
     rating: 4.8,
     reviews: 214,
     inStock: true,
@@ -38,7 +43,12 @@ const laptops = [
     brand: 'ام‌اس‌آی',
     category: 'گیمینگ',
     price: 138000000,
-    image: '/laptops/raptor-x16.jpg',
+    image: '/laptops/msi-raider-ge68-hx.jpg',
+    images: JSON.stringify([
+      '/laptops/msi-raider-ge68-hx.jpg',
+      '/laptops/msi-raider-ge68-hx-2.jpg',
+      '/laptops/msi-raider-ge68-hx-3.jpg',
+    ]),
     rating: 4.7,
     reviews: 331,
     inStock: true,
@@ -66,7 +76,12 @@ const laptops = [
     category: 'اداری',
     price: 61000000,
     oldPrice: 68000000,
-    image: '/laptops/slim-book-pro.jpg',
+    image: '/laptops/asus-vivobook-pro-14.jpg',
+    images: JSON.stringify([
+      '/laptops/asus-vivobook-pro-14.jpg',
+      '/laptops/asus-vivobook-pro-14-2.jpg',
+      '/laptops/asus-vivobook-pro-14-3.jpg',
+    ]),
     rating: 4.5,
     reviews: 178,
     inStock: true,
@@ -92,7 +107,12 @@ const laptops = [
     brand: 'لنوو',
     category: 'دانشجویی',
     price: 74000000,
-    image: '/laptops/flip-studio-2in1.jpg',
+    image: '/laptops/lenovo-yoga-9i-14.jpg',
+    images: JSON.stringify([
+      '/laptops/lenovo-yoga-9i-14.jpg',
+      '/laptops/lenovo-yoga-9i-14-2.jpg',
+      '/laptops/lenovo-yoga-9i-14-3.jpg',
+    ]),
     rating: 4.6,
     reviews: 96,
     inStock: true,
@@ -120,7 +140,12 @@ const laptops = [
     category: 'مهندسی',
     price: 154000000,
     oldPrice: 169000000,
-    image: '/laptops/creator-studio.png',
+    image: '/laptops/msi-creator-z16.jpg',
+    images: JSON.stringify([
+      '/laptops/msi-creator-z16.jpg',
+      '/laptops/msi-creator-z16-2.jpg',
+      '/laptops/msi-creator-z16-3.jpg',
+    ]),
     rating: 4.9,
     reviews: 142,
     inStock: false,
@@ -147,7 +172,12 @@ const laptops = [
     brand: 'لنوو',
     category: 'دانشجویی',
     price: 43500000,
-    image: '/laptops/everyday-air.png',
+    image: '/laptops/lenovo-ideapad-slim-3-13.jpg',
+    images: JSON.stringify([
+      '/laptops/lenovo-ideapad-slim-3-13.jpg',
+      '/laptops/lenovo-ideapad-slim-3-13-2.jpg',
+      '/laptops/lenovo-ideapad-slim-3-13-3.jpg',
+    ]),
     rating: 4.3,
     reviews: 267,
     inStock: true,
@@ -175,7 +205,12 @@ const laptops = [
     category: 'گیمینگ',
     price: 119000000,
     oldPrice: 132000000,
-    image: '/laptops/titan-blade-15.jpg',
+    image: '/laptops/hp-omen-16.jpg',
+    images: JSON.stringify([
+      '/laptops/hp-omen-16.jpg',
+      '/laptops/hp-omen-16-2.jpg',
+      '/laptops/hp-omen-16-3.jpg',
+    ]),
     rating: 4.6,
     reviews: 189,
     inStock: true,
@@ -202,7 +237,12 @@ const laptops = [
     brand: 'دل',
     category: 'اولترابوک',
     price: 87500000,
-    image: '/laptops/aurora-slim-13.jpg',
+    image: '/laptops/dell-xps-13-plus.jpg',
+    images: JSON.stringify([
+      '/laptops/dell-xps-13-plus.jpg',
+      '/laptops/dell-xps-13-plus-2.jpg',
+      '/laptops/dell-xps-13-plus-3.jpg',
+    ]),
     rating: 4.7,
     reviews: 156,
     inStock: true,
@@ -229,7 +269,12 @@ const laptops = [
     brand: 'ایسر',
     category: 'گیمینگ',
     price: 165000000,
-    image: '/laptops/cyber-force-17.jpg',
+    image: '/laptops/acer-predator-helios-17.jpg',
+    images: JSON.stringify([
+      '/laptops/acer-predator-helios-17.jpg',
+      '/laptops/acer-predator-helios-17-2.jpg',
+      '/laptops/acer-predator-helios-17-3.jpg',
+    ]),
     rating: 4.8,
     reviews: 98,
     inStock: true,
@@ -257,7 +302,12 @@ const laptops = [
     category: 'اداری',
     price: 52000000,
     oldPrice: 58000000,
-    image: '/laptops/nexus-office-15.jpg',
+    image: '/laptops/asus-expertbook-b15.jpg',
+    images: JSON.stringify([
+      '/laptops/asus-expertbook-b15.jpg',
+      '/laptops/asus-expertbook-b15-2.jpg',
+      '/laptops/asus-expertbook-b15-3.jpg',
+    ]),
     rating: 4.4,
     reviews: 203,
     inStock: true,
@@ -283,7 +333,12 @@ const laptops = [
     brand: 'لنوو',
     category: 'دانشجویی',
     price: 48900000,
-    image: '/laptops/aria-study-14.jpg',
+    image: '/laptops/lenovo-ideapad-5-pro-14.jpg',
+    images: JSON.stringify([
+      '/laptops/lenovo-ideapad-5-pro-14.jpg',
+      '/laptops/lenovo-ideapad-5-pro-14-2.jpg',
+      '/laptops/lenovo-ideapad-5-pro-14-3.jpg',
+    ]),
     rating: 4.5,
     reviews: 312,
     inStock: true,
@@ -310,7 +365,12 @@ const laptops = [
     brand: 'اچ‌پی',
     category: 'مهندسی',
     price: 142000000,
-    image: '/laptops/titan-workstation-16.jpg',
+    image: '/laptops/hp-zbook-firefly-16.jpg',
+    images: JSON.stringify([
+      '/laptops/hp-zbook-firefly-16.jpg',
+      '/laptops/hp-zbook-firefly-16-2.jpg',
+      '/laptops/hp-zbook-firefly-16-3.jpg',
+    ]),
     rating: 4.8,
     reviews: 87,
     inStock: true,
@@ -338,7 +398,12 @@ const laptops = [
     category: 'اولترابوک',
     price: 69500000,
     oldPrice: 76000000,
-    image: '/laptops/aurora-book-14.jpg',
+    image: '/laptops/dell-inspiron-14-plus.jpg',
+    images: JSON.stringify([
+      '/laptops/dell-inspiron-14-plus.jpg',
+      '/laptops/dell-inspiron-14-plus-2.jpg',
+      '/laptops/dell-inspiron-14-plus-3.jpg',
+    ]),
     rating: 4.6,
     reviews: 145,
     inStock: true,
@@ -364,7 +429,12 @@ const laptops = [
     brand: 'ایسر',
     category: 'گیمینگ',
     price: 98000000,
-    image: '/laptops/cyber-edge-15.jpg',
+    image: '/laptops/acer-nitro-5-15.jpg',
+    images: JSON.stringify([
+      '/laptops/acer-nitro-5-15.jpg',
+      '/laptops/acer-nitro-5-15-2.jpg',
+      '/laptops/acer-nitro-5-15-3.jpg',
+    ]),
     rating: 4.5,
     reviews: 167,
     inStock: true,
@@ -391,7 +461,12 @@ const laptops = [
     brand: 'ایسوس',
     category: 'اولترابوک',
     price: 78500000,
-    image: '/laptops/nexus-travel-13.jpg',
+    image: '/laptops/asus-zenbook-s-13.jpg',
+    images: JSON.stringify([
+      '/laptops/asus-zenbook-s-13.jpg',
+      '/laptops/asus-zenbook-s-13-2.jpg',
+      '/laptops/asus-zenbook-s-13-3.jpg',
+    ]),
     rating: 4.7,
     reviews: 129,
     inStock: false,
@@ -419,7 +494,12 @@ const laptops = [
     category: 'دانشجویی',
     price: 67000000,
     oldPrice: 72000000,
-    image: '/laptops/aria-convert-14.jpg',
+    image: '/laptops/lenovo-yoga-7-14.jpg',
+    images: JSON.stringify([
+      '/laptops/lenovo-yoga-7-14.jpg',
+      '/laptops/lenovo-yoga-7-14-2.jpg',
+      '/laptops/lenovo-yoga-7-14-3.jpg',
+    ]),
     rating: 4.4,
     reviews: 88,
     inStock: true,
@@ -445,7 +525,12 @@ const laptops = [
     brand: 'اچ‌پی',
     category: 'اداری',
     price: 81500000,
-    image: '/laptops/titan-pro-14.jpg',
+    image: '/laptops/hp-elitebook-840-g11.jpg',
+    images: JSON.stringify([
+      '/laptops/hp-elitebook-840-g11.jpg',
+      '/laptops/hp-elitebook-840-g11-2.jpg',
+      '/laptops/hp-elitebook-840-g11-3.jpg',
+    ]),
     rating: 4.6,
     reviews: 112,
     inStock: true,
@@ -473,7 +558,12 @@ const laptops = [
     category: 'مهندسی',
     price: 128000000,
     oldPrice: 139000000,
-    image: '/laptops/cyber-studio-16.jpg',
+    image: '/laptops/acer-concept-d-16.jpg',
+    images: JSON.stringify([
+      '/laptops/acer-concept-d-16.jpg',
+      '/laptops/acer-concept-d-16-2.jpg',
+      '/laptops/acer-concept-d-16-3.jpg',
+    ]),
     rating: 4.7,
     reviews: 76,
     inStock: true,
@@ -494,8 +584,6 @@ const laptops = [
     ]),
   },
 ]
-
-
 
 const sampleReviews = [
   { name: 'علی رضایی', rating: 5, comment: 'لپ‌تاپ فوق‌العاده‌ایه، برای گیمینگ عالی کار می‌کنه و خنک‌کننده‌ش خیلی قویه.' },
@@ -535,21 +623,20 @@ async function updateLaptopRating(laptopId: string) {
 async function main() {
   console.log('شروع seed...')
 
-  // پاک کردن داده‌های قبلی
   await prisma.review.deleteMany()
+  await prisma.orderItem.deleteMany()
+  await prisma.order.deleteMany()
   await prisma.laptop.deleteMany()
 
-  // افزودن لپ‌تاپ‌ها
   for (const laptop of laptops) {
     await prisma.laptop.create({ data: laptop })
   }
   console.log(`${laptops.length} لپ‌تاپ اضافه شد.`)
 
-  // افزودن نظرات رندوم
   const allLaptops = await prisma.laptop.findMany()
 
   for (const laptop of allLaptops) {
-    const count = 3 + Math.floor(Math.random() * 4) // ۳ تا ۶ نظر
+    const count = 3 + Math.floor(Math.random() * 4)
     const shuffled = [...sampleReviews].sort(() => Math.random() - 0.5)
 
     for (let i = 0; i < count; i++) {

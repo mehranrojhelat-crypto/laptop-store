@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import {
@@ -26,9 +25,9 @@ import {
 import { getReviews } from '@/lib/reviews'
 import { AddToCart } from '@/components/add-to-cart'
 import { ProductCard } from '@/components/product-card'
+import { ProductGallery } from '@/components/product-gallery'
 import { ReviewForm } from '@/components/reviews/review-form'
 import { ReviewList } from '@/components/reviews/review-list'
-import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://laptopland.ir'
@@ -130,12 +129,16 @@ export default async function ProductDetailPage({
     ? laptop.image
     : `${siteUrl}${laptop.image || '/placeholder.svg'}`
 
+  const galleryUrls = laptop.images.map((src) =>
+    src.startsWith('http') ? src : `${siteUrl}${src}`,
+  )
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: laptop.name,
     description: laptop.description,
-    image: [imageUrl],
+    image: galleryUrls.length > 0 ? galleryUrls : [imageUrl],
     brand: {
       '@type': 'Brand',
       name: laptop.brand,
@@ -175,7 +178,6 @@ export default async function ProductDetailPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* Breadcrumb */}
       <nav
         className="flex flex-wrap items-center gap-1 text-sm text-muted-foreground"
         aria-label="مسیر صفحه"
@@ -199,24 +201,14 @@ export default async function ProductDetailPage({
       </nav>
 
       <div className="mt-6 grid gap-8 lg:grid-cols-2">
-        {/* Image */}
-        <div className="relative aspect-square overflow-hidden rounded-2xl border border-border bg-secondary">
-          <Image
-            src={laptop.image || '/placeholder.svg'}
-            alt={`${laptop.name} — ${laptop.brand} ${laptop.category}`}
-            fill
-            priority
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            className="object-contain p-8"
-          />
-          {laptop.badge && (
-            <Badge className="absolute right-4 top-4 bg-primary text-primary-foreground">
-              {laptop.badge}
-            </Badge>
-          )}
-        </div>
+        <ProductGallery
+          images={laptop.images}
+          name={laptop.name}
+          brand={laptop.brand}
+          category={laptop.category}
+          badge={laptop.badge}
+        />
 
-        {/* Info */}
         <div>
           <span className="text-sm text-muted-foreground">
             {laptop.brand} · {laptop.category}
@@ -285,7 +277,6 @@ export default async function ProductDetailPage({
         </div>
       </div>
 
-      {/* Specs */}
       <section className="mt-12">
         <h2 className="text-xl font-bold">مشخصات فنی</h2>
         <div className="mt-4 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2">
@@ -306,7 +297,6 @@ export default async function ProductDetailPage({
         </div>
       </section>
 
-      {/* Reviews */}
       <section className="mt-12">
         <h2 className="mb-6 text-xl font-bold">
           نظرات کاربران ({laptop.reviews.toLocaleString('fa-IR')})
@@ -322,7 +312,6 @@ export default async function ProductDetailPage({
         </div>
       </section>
 
-      {/* Related / Similar products */}
       {suggestions.length > 0 && (
         <section className="mt-12">
           <div className="mb-5 flex items-end justify-between gap-4">

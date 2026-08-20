@@ -15,6 +15,7 @@ model Laptop {
   price       Int
   oldPrice    Int?
   image       String
+  images      String   @default("[]")
   rating      Float
   reviews     Int
   inStock     Boolean  @default(true)
@@ -67,10 +68,8 @@ model ContactMessage {
 model Order {
   id            String   @id @default(cuid())
 
-  // کد پیگیری کوتاه برای نمایش به کاربر
   trackingCode  String   @unique
 
-  // اطلاعات گیرنده
   firstName     String
   lastName      String
   phone         String
@@ -78,16 +77,13 @@ model Order {
   address       String
   postalCode    String
 
-  // پرداخت و وضعیت
-  paymentMethod String   // online | cod
-  status        String   @default("PENDING") // PENDING | PAID | SHIPPED | DELIVERED | CANCELLED
+  paymentMethod String
+  status        String   @default("PENDING")
 
-  // مبالغ (تومان)
   subtotal      Int
   shipping      Int
   total         Int
 
-  // اگر کاربر لاگین باشد (از localStorage)
   userId        String?
   userEmail     String?
   userName      String?
@@ -112,7 +108,6 @@ model OrderItem {
   laptopId   String
   laptop     Laptop @relation(fields: [laptopId], references: [id])
 
-  // snapshot قیمت و مشخصات لحظه خرید
   name       String
   brand      String
   image      String
