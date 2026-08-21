@@ -13,12 +13,12 @@ import {
   Clock,
   BookOpen,
 } from 'lucide-react'
-import { getFeaturedLaptops, getDealLaptops, categories } from '@/lib/products'
+import { getFeaturedLaptops, getDealLaptops, categories, brands } from '@/lib/products'
 import { getAllArticles } from '@/lib/articles'
-import { ProductCard } from '@/components/product-card'
 import { Button } from '@/components/ui/button'
 import { HeroCarousel } from '@/components/hero-carousel'
 import { ProductCarousel } from '@/components/product-carousel'
+import { brandLogoMap } from '@/components/brand-logos'
 
 const categoryIcons: Record<string, typeof Cpu> = {
   گیمینگ: Gamepad2,
@@ -29,7 +29,7 @@ const categoryIcons: Record<string, typeof Cpu> = {
 }
 
 export default async function HomePage() {
-  const featured = await getFeaturedLaptops(8) // بیشتر از قبل برای اسلایدر
+  const featured = await getFeaturedLaptops(8)
   const deals = await getDealLaptops()
   const latestArticles = getAllArticles().slice(0, 3)
 
@@ -176,7 +176,42 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Featured - حالا اسلایدر */}
+      {/* Brands */}
+      <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+        <div className="mb-6">
+          <h2 className="text-xl font-bold sm:text-2xl">برندهای محبوب</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            خرید مستقیم بر اساس برند مورد علاقه‌ات
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          {brands.map((brand) => {
+            const Logo = brandLogoMap[brand]
+            return (
+              <Link
+                key={brand}
+                href={`/products?brand=${encodeURIComponent(brand)}`}
+                className="group relative flex flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl border border-border/70 bg-card px-4 py-7 text-center shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/10"
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-primary/0 to-primary/5 opacity-0 transition-opacity group-hover:opacity-100" />
+
+                <span className="relative flex h-12 w-full items-center justify-center text-foreground transition-all duration-300 group-hover:scale-110 group-hover:text-primary">
+                  {Logo ? (
+                    <Logo className="max-h-8 max-w-[85%]" />
+                  ) : (
+                    <span className="text-sm font-black">{brand}</span>
+                  )}
+                </span>
+
+                <span className="relative text-sm font-bold">{brand}</span>
+              </Link>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* Featured */}
       <section className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
         <div className="mb-7 flex items-end justify-between gap-4">
           <div>
@@ -202,7 +237,7 @@ export default async function HomePage() {
         />
       </section>
 
-      {/* Deals - حالا اسلایدر */}
+      {/* Deals */}
       <section
         id="deals"
         className="mx-auto max-w-7xl scroll-mt-24 px-4 py-14 sm:px-6"

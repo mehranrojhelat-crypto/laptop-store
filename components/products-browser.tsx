@@ -34,19 +34,23 @@ const sortLabels: Record<SortKey, string> = {
 type Props = {
   initialLaptops: Laptop[]
   initialCategory?: string
+  initialBrand?: string
   initialSearch?: string
 }
 
 export function ProductsBrowser({
   initialLaptops,
   initialCategory,
+  initialBrand,
   initialSearch,
 }: Props) {
   const [search, setSearch] = useState(initialSearch ?? '')
   const [selectedCats, setSelectedCats] = useState<string[]>(
     initialCategory ? [initialCategory] : [],
   )
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([])
+  const [selectedBrands, setSelectedBrands] = useState<string[]>(
+    initialBrand ? [initialBrand] : [],
+  )
   const [selectedRam, setSelectedRam] = useState<number[]>([])
   const [priceRange, setPriceRange] = useState<[number, number]>([
     PRICE_MIN,
