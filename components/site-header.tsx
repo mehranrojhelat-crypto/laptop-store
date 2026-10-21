@@ -24,6 +24,7 @@ import {
   Package,
   Loader2,
   HelpCircle,
+  Wallet,
 } from 'lucide-react'
 import { useCart } from '@/components/cart-provider'
 import { useAuth } from '@/components/auth-provider'
@@ -44,12 +45,12 @@ const categories = [
 
 const pages = [
   { label: 'صفحه اصلی', href: '/', icon: Home },
+  { label: 'بودجه من چقدر می‌ارزد؟', href: '/budget-finder', icon: Wallet },
   { label: 'درباره ما', href: '/about', icon: Info },
   { label: 'سوالات متداول', href: '/faq', icon: HelpCircle },
   { label: 'وبلاگ', href: '/blog', icon: BookOpen },
   { label: 'تماس با ما', href: '/contact', icon: Phone },
 ]
-
 
 type SearchResult = {
   id: string
@@ -281,22 +282,28 @@ export function SiteHeader() {
           </Link>
 
           <nav className="mr-2 hidden items-center gap-0.5 lg:flex">
-  {categories.slice(0, 4).map((item) => (
-    <Link
-      key={item.href}
-      href={item.href}
-      className="rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-secondary hover:text-foreground"
-    >
-      {item.label}
-    </Link>
-  ))}
-  <Link
-    href="/blog"
-    className="rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-secondary hover:text-foreground"
-  >
-    وبلاگ
-  </Link>
-</nav>
+            {categories.slice(0, 4).map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-secondary hover:text-foreground"
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Link
+              href="/blog"
+              className="rounded-xl px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:bg-secondary hover:text-foreground"
+            >
+              وبلاگ
+            </Link>
+            <Link
+              href="/budget-finder"
+              className="rounded-xl px-3 py-2 text-sm font-medium text-primary transition-all hover:bg-primary/10"
+            >
+              بودجه من؟
+            </Link>
+          </nav>
 
           <div className="flex-1" />
 

@@ -12,13 +12,13 @@ import {
   Search,
   Clock,
   BookOpen,
+  Wallet,
 } from 'lucide-react'
 import { getFeaturedLaptops, getDealLaptops, categories, brands } from '@/lib/products'
 import { getAllArticles } from '@/lib/articles'
 import { Button } from '@/components/ui/button'
 import { HeroCarousel } from '@/components/hero-carousel'
 import { ProductCarousel } from '@/components/product-carousel'
-import { brandLogoMap } from '@/components/brand-logos'
 
 const categoryIcons: Record<string, typeof Cpu> = {
   گیمینگ: Gamepad2,
@@ -26,6 +26,16 @@ const categoryIcons: Record<string, typeof Cpu> = {
   اداری: Briefcase,
   مهندسی: Cpu,
   دانشجویی: Cpu,
+}
+
+/** عکس برندها از public/brands — اسم فایل‌ها را با فایل‌های خودت هماهنگ کن */
+const brandImages: Record<string, string> = {
+  ASUS: '/brands/asus.png',
+  MSI: '/brands/msi.png',
+  Lenovo: '/brands/lenovo.png',
+  HP: '/brands/hp.png',
+  Dell: '/brands/dell.png',
+  Acer: '/brands/acer.png',
 }
 
 export default async function HomePage() {
@@ -136,7 +146,10 @@ export default async function HomePage() {
                 size="lg"
                 className="rounded-2xl border-primary/25 bg-background/50 px-7 text-base backdrop-blur-sm transition-all hover:border-primary/50 hover:bg-primary/5"
               >
-                <Link href="#deals">پیشنهادهای ویژه</Link>
+                <Link href="/budget-finder">
+                  <Wallet className="ml-1 size-4" />
+                  بودجه من چقدر می‌ارزد؟
+                </Link>
               </Button>
             </div>
           </div>
@@ -187,7 +200,7 @@ export default async function HomePage() {
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {brands.map((brand) => {
-            const Logo = brandLogoMap[brand]
+            const src = brandImages[brand]
             return (
               <Link
                 key={brand}
@@ -196,9 +209,15 @@ export default async function HomePage() {
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-primary/0 to-primary/5 opacity-0 transition-opacity group-hover:opacity-100" />
 
-                <span className="relative flex h-12 w-full items-center justify-center text-foreground transition-all duration-300 group-hover:scale-110 group-hover:text-primary">
-                  {Logo ? (
-                    <Logo className="max-h-8 max-w-[85%]" />
+                <span className="relative flex h-12 w-full items-center justify-center">
+                  {src ? (
+                    <Image
+                      src={src}
+                      alt={brand}
+                      width={120}
+                      height={48}
+                      className="max-h-10 w-auto object-contain transition-transform duration-300 group-hover:scale-110"
+                    />
                   ) : (
                     <span className="text-sm font-black">{brand}</span>
                   )}
